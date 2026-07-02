@@ -42,22 +42,59 @@ Spreads:
 10Y-3M (Recession Warning): {s10_3:.2f}%
 30Y-5Y (Long-Term Curve): {s30_5:.2f}%
 
-Give a concise 360° analysis covering:
-1. Short/Medium/Long-term yield outlook
-2. Equities (sectors, regions)
-3. Bonds (duration, credit)
-4. Gold
-5. Commodities (energy, metals)
-6. Cash/FX
-7. Actionable strategy with ETF/ticker ideas
+Provide a complete 360° analysis. For every prediction or recommendation, include:
+- The rationale/mechanism behind it (why this happens)
+- Simple explanations of any economic jargon in [square brackets]
+- How global money flows are likely to move
 
-No intro, no footer. Just pure analysis.
+Cover these 7 areas:
+
+1. SHORT/MEDIUM/LONG-TERM YIELD OUTLOOK
+   - Direction of each yield (3M, 2Y, 5Y, 10Y, 30Y)
+   - Rationale: what economic forces drive the move
+   - Jargon explanations: [term = plain English]
+
+2. EQUITIES (Sectors & Regions)
+   - Which sectors to overweight/underweight and why
+   - Which regions to prefer and why
+   - Rationale: how yields affect valuations and earnings
+   - Jargon explanations as needed
+
+3. BONDS (Duration & Credit)
+   - Which duration to prefer/avoid and why
+   - Credit quality view and why
+   - Rationale: how spread movements affect bond prices
+
+4. GOLD & PRECIOUS METALS
+   - Price direction and rationale (real yields, USD, central bank buying)
+   - Silver vs Gold comparison
+   - Jargon explanations
+
+5. COMMODITIES (Energy, Metals, Agriculture)
+   - Outlook for crude oil, copper, aluminum, agriculture
+   - Rationale: supply/demand, inflation linkage, industrial cycle
+   - Jargon explanations
+
+6. CASH & FX (USD & Major Pairs)
+   - USD direction and rationale (yield differentials, safe-haven flows)
+   - Major FX pairs outlook
+   - Jargon explanations
+
+7. ACTIONABLE STRATEGY + PORTFOLIO MIX
+   a. Suggested portfolio allocation in % (e.g., Equity XX%, Bonds XX%, Gold XX%, Silver XX%, Bitcoin XX%, Cash XX%)
+   b. Preferred equity theme (sectors, factors) – and why
+   c. Avoid equity theme – and why
+   d. Preferred bond duration – and why
+   e. Bond duration to avoid – and why
+   f. Gold vs Silver vs Bitcoin: which one and why
+   g. Global money flow trend: where is capital moving (US, Europe, Asia, EM)
+
+Keep it concise but thorough. Use simple language where possible.
 """
-
     headers = {"Content-Type": "application/json"}
     
     # Try models in order: pro first, then flash
-    models_to_try = ["gemini-2.5-pro", "gemini-3.5-flash"]
+    models_to_try = ["gemini-2.5-pro", "gemini-2.5-flash"]
     
     for model in models_to_try:
         print(f"🔄 Trying model: {model}...")
