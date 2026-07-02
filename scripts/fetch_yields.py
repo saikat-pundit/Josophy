@@ -106,8 +106,10 @@ def save_to_csv(yields_dict, filename="data/yield_history.csv"):
     # Check if date already exists
     if date in df_existing["date"].values:
         print(f"⚠️ Data for {date} already exists. Updating...")
-        # Update the existing row
-        df_existing.loc[df_existing["date"] == date] = row
+        # Find the index of the existing row
+        idx = df_existing[df_existing["date"] == date].index[0]
+        # Update the row using .loc with a list of values
+        df_existing.loc[idx] = [row['date'], row['3M'], row['2Y'], row['5Y'], row['10Y'], row['30Y']]
         df_existing.to_csv(filename, index=False)
         return df_existing
     else:
