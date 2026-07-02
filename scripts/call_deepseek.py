@@ -1,34 +1,147 @@
 import os
 import json
 from datetime import datetime
-from openai import OpenAI
 from dotenv import load_dotenv
+import requests
 
 load_dotenv()
 
+# Choose your provider
+PROVIDER = "huggingface"  # Options: "huggingface", "together", "openrouter", "deepseek"
+
+# API keys
+HUGGINGFACE_TOKEN = os.getenv("HUGGINGFACE_TOKEN")
+TOGETHER_KEY = os.getenv("TOGETHER_KEY")
+OPENROUTER_KEY = os.getenv("OPENROUTER_KEY")
 DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
 
-# Initialize DeepSeek client (OpenAI-compatible)
-client = OpenAI(
-    api_key=DEEPSEEK_API_KEY,
-    base_url="https://api.deepseek.com"
-)
+def call_llm(prompt, fallback=True):
+    """Call LLM with chosen provider."""
+    
+    if PROVIDER == "huggingface" and HUGGINGFACE_TOKEN:
+        return call_huggingface(prompt)
+    elif PROVIDER == "together" and TOGETHER_KEY:
+        return call_together_ai(prompt)
+    elif PROVIDER == "openrouter" and OPENROUTER_KEY:
+        return call_openrouter(prompt)
+    elif PROVIDER == "deepseek" and DEEPSEEK_API_KEY:
+        return call_deepseek_api(prompt)
+    else:
+        print("⚠️ No valid API key found. Using fallback.")
+        return generate_fallback_response(prompt)
+
+def call_huggingface(prompt):
+    """Call Hugging Face free inference API."""
+    API_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2"
+    headers = {"Authorization": f"Bearer {HUGGINGFACE_TOKEN}"}
+    
+    # Format prompt for instruction model
+    formatted_prompt = f"<s>[INST] {prompt} [/INST]"
+    
+    payload = {
+        "inputs": formatted_prompt,
+        "parameters": {
+            "max_length": 1000,
+            "temperature": 0.7,
+            "top_p": 0.95
+        }
+    }
+    
+    try:
+        response = requests.post(API_URL, headers=headers, json=payload)
+        result = response.json()
+        
+        # Handle different response formats
+        if isinstance(result, list):
+            return result[0]["generated_text"]
+        elif isinstance(result, dict) and "generated_text" in result:
+            return result["generated_text"]
+        else:
+            return str(result)
+    except Exception as e:
+        print(f"⚠️ HuggingFace API error: {e}")
+        return generate_fallback_response(prompt)
+
+def call_together_ai(prompt):
+    """Call Together.ai free inference API."""
+    API_URL = "https://api.together.xyz/v1/completions"
+    headers = {
+        "Authorization": f"Bearer {TOGETHER_KEY}",
+        "Content-Type": "application/json"
+    }
+    
+    payload = {
+        "model": "mistralai/Mistral-7B-Instruct-v0.2",
+        "prompt": prompt,
+        "max_tokens": 1000,
+        "temperature": 0.7
+    }
+    
+    try:
+        response = requests.post(API_URL, headers=headers, json=payload)
+        return response.json()["choices"][0]["text"]
+    except Exception as e:
+        print(f"⚠️ Together.ai API error: {e}")
+        return generate_fallback_response(prompt)
+
+def call_openrouter(prompt):
+    """Call OpenRouter with free credits."""
+    API_URL = "https://openrouter.ai/api/v1/chat/completions"
+    headers = {
+        "Authorization": f"Bearer {OPENROUTER_KEY}",
+        "Content-Type": "application/json"
+    }
+    
+    payload = {
+        "model": "mistralai/mistral-7b-instruct:free",
+        "messages": [{"role": "user", "content": prompt}]
+    }
+    
+    try:
+        response = requests.post(API_URL, headers=headers, json=payload)
+        return response.json()["choices"][0]["message"]["content"]
+    except Exception as e:
+        print(f"⚠️ OpenRouter API error: {e}")
+        return generate_fallback_response(prompt)
+
+def call_deepseek_api(prompt):
+    """Call DeepSeek API (requires credits)."""
+    from openai import OpenAI
+    client = OpenAI(api_key=DEEPSEEK_API_KEY, base_url="https://api.deepseek.com")
+    
+    try:
+        response = client.chat.completions.create(
+            model="deepseek-chat",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.7,
+            max_tokens=2000
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        print(f"⚠️ DeepSeek API error: {e}")
+        return generate_fallback_response(prompt)
 
 def build_prompt(yields, regime, confidence, explanation, history_df):
-    """Build the prompt for DeepSeek with yield data and regime context."""
+    """Build the prompt for LLM with yield data and regime context."""
     
-    # Get recent trend (last 5 days)
-    if history_df is not None and len(history_df) >= 5:
-        recent = history_df.tail(5)
+    # Get recent trend (last 30 days for context)
+    if history_df is not None and len(history_df) >= 30:
+        recent = history_df.tail(30)
         trend_10y = recent['10Y'].tolist()
         trend_3m = recent['3M'].tolist()
         trend_spread = recent['10Y_3M_spread'].tolist()
+        
+        # Calculate 30-day change
+        change_10y = trend_10y[-1] - trend_10y[0]
+        change_3m = trend_3m[-1] - trend_3m[0]
     else:
         trend_10y = []
         trend_3m = []
         trend_spread = []
+        change_10y = 0
+        change_3m = 0
     
-    # Safely get spreads with defaults
+    # Safely get spreads
     spread_10y_3m = yields.get('10Y_3M_spread', yields.get('10Y', 0) - yields.get('3M', 0))
     spread_10y_2y = yields.get('10Y_2Y_spread', yields.get('10Y', 0) - yields.get('2Y', 0))
     
@@ -44,13 +157,12 @@ You are a macro strategist analyzing the US Treasury yield curve daily.
 - 10Y-3M Spread: {spread_10y_3m:.2f}%
 - 10Y-2Y Spread: {spread_10y_2y:.2f}%
 
+**30-DAY CHANGE:**
+- 10Y: {change_10y:.2f}%
+- 3M: {change_3m:.2f}%
+
 **CURRENT REGIME:** {regime} (Confidence: {confidence:.2f})
 **EXPLANATION:** {explanation}
-
-**RECENT TREND (last 5 days):**
-- 10Y: {trend_10y}
-- 3M: {trend_3m}
-- Spread: {trend_spread}
 
 Based on the yield curve regime and macro principles, provide:
 
@@ -82,29 +194,8 @@ Be concise but thorough. Use the yield curve playbook from your training.
 """
     return prompt
 
-def call_deepseek(prompt, fallback=True):
-    """Call DeepSeek API with fallback response if API fails."""
-    
-    try:
-        response = client.chat.completions.create(
-            model="deepseek-chat",
-            messages=[
-                {"role": "system", "content": "You are a macro strategist specialized in yield curve analysis."},
-                {"role": "user", "content": prompt}
-            ],
-            temperature=0.7,
-            max_tokens=2000
-        )
-        return response.choices[0].message.content, True
-    
-    except Exception as e:
-        print(f"⚠️ DeepSeek API error: {e}")
-        if fallback:
-            return generate_fallback_response(prompt), False
-        return f"API Error: {str(e)}", False
-
 def generate_fallback_response(prompt):
-    """Generate a rule-based fallback response when DeepSeek is unavailable."""
+    """Generate a rule-based fallback response when API is unavailable."""
     
     # Extract regime from prompt
     lines = prompt.split('\n')
@@ -114,21 +205,6 @@ def generate_fallback_response(prompt):
             regime = line.replace("CURRENT REGIME:", "").strip()
             break
     
-    # Pull yield data
-    yields = {}
-    for line in lines:
-        if "10-Year:" in line:
-            try:
-                yields['10Y'] = float(line.split(':')[1].replace('%', '').strip())
-            except:
-                pass
-        if "3-Month:" in line:
-            try:
-                yields['3M'] = float(line.split(':')[1].replace('%', '').strip())
-            except:
-                pass
-    
-    # Generate fallback based on regime (from your PDF)
     fallback_responses = {
         "NORMAL_UPWARD_SLOPING": """
 **SHORT-TERM OUTLOOK (1-3 months):**
@@ -285,15 +361,11 @@ def generate_fallback_response(prompt):
     return fallback_responses.get(regime, "Unable to generate fallback response for this regime.")
 
 def generate_daily_report(yields, regime, confidence, explanation, history_df):
-    """Generate complete daily report with DeepSeek or fallback."""
+    """Generate complete daily report with LLM or fallback."""
     
-    # Build prompt
     prompt = build_prompt(yields, regime, confidence, explanation, history_df)
+    analysis = call_llm(prompt)
     
-    # Call DeepSeek
-    analysis, api_success = call_deepseek(prompt)
-    
-    # Build report
     report = f"""
 ============================================================
 📅 YIELD CURVE DAILY REPORT - {yields['date']}
@@ -313,12 +385,12 @@ def generate_daily_report(yields, regime, confidence, explanation, history_df):
 🔍 CURRENT REGIME: {regime} (Confidence: {confidence:.2f})
   {explanation}
 
-{'🤖 ANALYSIS (DeepSeek):' if api_success else '📋 ANALYSIS (Fallback - API unavailable):'}
+📋 ANALYSIS:
 {analysis}
 
 ============================================================
 ✅ Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
-{'⚠️ Using fallback response - DeepSeek API not available' if not api_success else '💡 Powered by DeepSeek AI'}
+💡 Powered by {PROVIDER.upper()}
 ============================================================
 """
     return report
