@@ -1,0 +1,22 @@
+{
+  "date": "2026-06-30",
+  "yields": {
+    "date": "2026-06-30",
+    "3M": 3.87,
+    "2Y": 4.14,
+    "5Y": 4.19,
+    "10Y": 4.44,
+    "30Y": 4.91,
+    "10Y_3M_spread": 0.5700000000000003,
+    "10Y_2Y_spread": 0.3000000000000007,
+    "2Y_3M_spread": 0.2699999999999996
+  },
+  "spreads": {
+    "10Y_3M": 0.5700000000000003,
+    "10Y_2Y": 0.3000000000000007,
+    "2Y_3M": 0.2699999999999996
+  },
+  "regime": "NORMAL_UPWARD_SLOPING",
+  "confidence": 0.6,
+  "explanation": "Positive but flat curve. Moderate expansion, watch for directional change."
+}
