@@ -81,7 +81,7 @@ Keep the analysis concise yet exhaustive. Prioritize forward-looking reasoning o
 """
     headers = {"Content-Type": "application/json"}
     
-    models_to_try = ["gemini-2.5-pro", "gemini-2.5-flash"]
+    models_to_try = ["gemini-2.5-pro", "gemini-3.5-flash", "gemini-2.5-flash"]
     
     for model in models_to_try:
         print(f"🔄 Trying model: {model}...")
