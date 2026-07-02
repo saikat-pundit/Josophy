@@ -63,23 +63,6 @@ def main():
         f.write(report)
     print(f"📄 Report saved to: {report_file}")
     
-    # Also save latest summary to a JSON
-    summary = {
-        "date": date,
-        "yields": yields,
-        "spreads": {
-            "10Y_3M": yields['10Y_3M_spread'],
-            "10Y_2Y": yields['10Y_2Y_spread'],
-            "2Y_3M": yields['2Y_3M_spread']
-        },
-        "regime": regime,
-        "confidence": confidence,
-        "explanation": explanation
-    }
-    import json
-    with open(f"{report_dir}/summary_{date}.json", 'w') as f:
-        json.dump(summary, f, indent=2)
-    
     print("✅ Done!")
 
 if __name__ == "__main__":
