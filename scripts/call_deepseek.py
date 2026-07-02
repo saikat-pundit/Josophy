@@ -7,8 +7,6 @@ import pandas as pd
 load_dotenv()
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-GEMINI_MODEL = "gemini-2.5-pro"
-GEMINI_API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent"
 
 def call_gemini(yields, history_df):
     """Call Gemini with last 365 days and return AI analysis only."""
@@ -57,17 +55,48 @@ No intro, no footer. Just pure analysis.
 """
 
     headers = {"Content-Type": "application/json"}
-    payload = {"contents": [{"parts": [{"text": prompt}]}]}
-
-    try:
-        response = requests.post(f"{GEMINI_API_URL}?key={GEMINI_API_KEY}", headers=headers, json=payload)
-        if response.status_code == 200:
-            result = response.json()
-            if "candidates" in result and len(result["candidates"]) > 0:
-                return result["candidates"][0]["content"]["parts"][0]["text"]
-        return "⚠️ Gemini returned no analysis."
-    except Exception as e:
-        return f"⚠️ API error: {e}"
+    
+    # Try models in order: pro first, then flash
+    models_to_try = ["gemini-2.5-pro", "gemini-2.5-flash"]
+    
+    for model in models_to_try:
+        print(f"🔄 Trying model: {model}...")
+        api_url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
+        
+        payload = {
+            "contents": [{"parts": [{"text": prompt}]}],
+            "generationConfig": {
+                "maxOutputTokens": 4096,
+                "temperature": 0.7,
+                "topP": 0.95
+            }
+        }
+        
+        try:
+            response = requests.post(f"{api_url}?key={GEMINI_API_KEY}", headers=headers, json=payload, timeout=60)
+            
+            if response.status_code == 200:
+                result = response.json()
+                if "candidates" in result and len(result["candidates"]) > 0:
+                    if "content" in result["candidates"][0] and "parts" in result["candidates"][0]["content"]:
+                        text = result["candidates"][0]["content"]["parts"][0]["text"]
+                        if text and len(text.strip()) > 0:
+                            print(f"✅ Success with model: {model}")
+                            return text
+                        else:
+                            print(f"⚠️ Model {model} returned empty text")
+                    else:
+                        print(f"⚠️ Model {model} returned invalid structure")
+                else:
+                    print(f"⚠️ Model {model} returned no candidates")
+            else:
+                print(f"⚠️ Model {model} failed: {response.status_code} - {response.text}")
+                
+        except Exception as e:
+            print(f"⚠️ Model {model} error: {e}")
+    
+    # If all models fail, return a clear error
+    return "⚠️ All Gemini models failed to generate analysis. Please check API key or try again later."
 
 def generate_daily_report(yields, regime, confidence, explanation, history_df):
     """Generate full report with AI analysis."""
@@ -99,5 +128,5 @@ def generate_daily_report(yields, regime, confidence, explanation, history_df):
 📋 AI ANALYSIS:
 {analysis}
 ============================================================
-✅ {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} | Gemini {GEMINI_MODEL}
+✅ {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} | Gemini
 """
