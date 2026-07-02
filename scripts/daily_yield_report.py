@@ -2,37 +2,39 @@ import os
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from fetch_yields import fetch_all_yields, save_to_csv, load_history, get_most_recent_available_date
+from fetch_yields import fetch_missing_dates, load_history
 from analyze_regime import compute_spreads, classify_regime
 from call_deepseek import generate_daily_report
 
 def main():
     print("🚀 Starting daily yield curve report...")
     
-    # Get most recent available date
-    date = get_most_recent_available_date()
-    print(f"📅 Most recent available date: {date}")
+    # Fetch only missing data (smart incremental update)
+    df = fetch_missing_dates()
     
-    # Fetch yields
-    yields = fetch_all_yields(date)
-    if yields.get('10Y') is None:
-        print("❌ Failed to fetch 10Y yield data. Check FRED API key.")
+    if df is None or df.empty:
+        print("❌ Failed to fetch yield data. Check FRED API key.")
         return
     
-    # Save to CSV (append)
-    df = save_to_csv(yields)
-    
-    # Load full history and compute spreads
-    df = load_history()
-    df = compute_spreads(df)  # This adds 10Y_3M_spread, 10Y_2Y_spread, etc.
+    # Compute spreads
+    df = compute_spreads(df)
     
     # Get latest data with spreads
     latest = df.iloc[-1]
+    date = latest['date']
     
-    # Add spreads to yields dict for the report
-    yields['10Y_3M_spread'] = latest['10Y_3M_spread']
-    yields['10Y_2Y_spread'] = latest['10Y_2Y_spread']
-    yields['2Y_3M_spread'] = latest['2Y_3M_spread']
+    # Prepare yields dict for report
+    yields = {
+        "date": date,
+        "3M": latest['3M'],
+        "2Y": latest['2Y'],
+        "5Y": latest['5Y'],
+        "10Y": latest['10Y'],
+        "30Y": latest['30Y'],
+        "10Y_3M_spread": latest['10Y_3M_spread'],
+        "10Y_2Y_spread": latest['10Y_2Y_spread'],
+        "2Y_3M_spread": latest['2Y_3M_spread']
+    }
     
     # Classify regime
     regime, confidence, explanation = classify_regime(latest, df)
