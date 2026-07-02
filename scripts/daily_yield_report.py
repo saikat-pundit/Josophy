@@ -19,15 +19,22 @@ def main():
         print("❌ Failed to fetch 10Y yield data. Check FRED API key.")
         return
     
-    # Save to CSV
+    # Save to CSV (append)
     df = save_to_csv(yields)
     
-    # Load history and compute spreads
+    # Load full history and compute spreads
     df = load_history()
-    df = compute_spreads(df)
+    df = compute_spreads(df)  # This adds 10Y_3M_spread, 10Y_2Y_spread, etc.
     
-    # Get latest data
+    # Get latest data with spreads
     latest = df.iloc[-1]
+    
+    # Add spreads to yields dict for the report
+    yields['10Y_3M_spread'] = latest['10Y_3M_spread']
+    yields['10Y_2Y_spread'] = latest['10Y_2Y_spread']
+    yields['2Y_3M_spread'] = latest['2Y_3M_spread']
+    
+    # Classify regime
     regime, confidence, explanation = classify_regime(latest, df)
     
     # Generate report
@@ -55,8 +62,9 @@ def main():
         "date": date,
         "yields": yields,
         "spreads": {
-            "10Y_3M": yields['10Y_3M_spread'] if '10Y_3M_spread' in yields else None,
-            "10Y_2Y": yields['10Y_2Y_spread'] if '10Y_2Y_spread' in yields else None
+            "10Y_3M": yields['10Y_3M_spread'],
+            "10Y_2Y": yields['10Y_2Y_spread'],
+            "2Y_3M": yields['2Y_3M_spread']
         },
         "regime": regime,
         "confidence": confidence,
