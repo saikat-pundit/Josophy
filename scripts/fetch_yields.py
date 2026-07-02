@@ -32,6 +32,10 @@ def fetch_yield(series_id, date=None):
     }
     
     response = requests.get(BASE_URL, params=params)
+    
+    if response.status_code != 200:
+        return None
+    
     data = response.json()
     
     if data.get("observations") and len(data["observations"]) > 0:
@@ -39,29 +43,46 @@ def fetch_yield(series_id, date=None):
         return float(value) if value != "." else None
     return None
 
+def get_most_recent_available_date():
+    """Find the most recent date with available data."""
+    # Check today, yesterday, and up to 7 days back
+    for i in range(7):
+        date = (datetime.now() - timedelta(days=i)).strftime("%Y-%m-%d")
+        # Skip weekends (FRED only has weekday data)
+        weekday = datetime.strptime(date, "%Y-%m-%d").weekday()
+        if weekday >= 5:  # Saturday=5, Sunday=6
+            continue
+        
+        # Try to fetch 10Y yield for this date
+        val = fetch_yield("DGS10", date)
+        if val is not None:
+            return date
+    
+    # Fallback: use yesterday
+    return (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
+
 def fetch_all_yields(date=None):
     """Fetch all benchmark yields for a given date."""
+    if date is None:
+        date = get_most_recent_available_date()
+    
+    print(f"📅 Fetching yields for: {date}")
+    
     yields = {}
     for tenure, series_id in SERIES_MAP.items():
         val = fetch_yield(series_id, date)
         if val is not None:
             yields[tenure] = val
+        else:
+            yields[tenure] = None
+            print(f"⚠️ No data for {tenure} on {date}")
+    
+    yields["date"] = date
     return yields
-
-def get_last_business_day():
-    """Get the most recent business day (weekday, not today if weekend)."""
-    today = datetime.now()
-    # If today is weekend, go back to Friday
-    if today.weekday() == 5:  # Saturday
-        return (today - timedelta(days=1)).strftime("%Y-%m-%d")
-    elif today.weekday() == 6:  # Sunday
-        return (today - timedelta(days=2)).strftime("%Y-%m-%d")
-    else:
-        return today.strftime("%Y-%m-%d")
 
 def save_to_csv(yields_dict, filename="data/yield_history.csv"):
     """Append daily yield data to CSV."""
-    date = yields_dict.get("date", datetime.now().strftime("%Y-%m-%d"))
+    date = yields_dict.get("date")
     row = {
         "date": date,
         "3M": yields_dict.get("3M"),
@@ -97,14 +118,13 @@ def load_history(filename="data/yield_history.csv"):
 
 # --- MAIN TEST ---
 if __name__ == "__main__":
-    # Get last business day
-    last_biz = get_last_business_day()
-    print(f"Fetching yields for: {last_biz}")
+    # Get most recent available date
+    date = get_most_recent_available_date()
+    print(f"📅 Most recent available date: {date}")
     
     # Fetch all yields
-    yields = fetch_all_yields(last_biz)
-    yields["date"] = last_biz
-    print(f"Yields: {yields}")
+    yields = fetch_all_yields(date)
+    print(f"📊 Yields: {yields}")
     
     # Save to CSV
     df = save_to_csv(yields)
