@@ -103,7 +103,7 @@ Keep it concise but thorough. Use simple language where possible.
         payload = {
             "contents": [{"parts": [{"text": prompt}]}],
             "generationConfig": {
-                "maxOutputTokens": 4096,
+                "maxOutputTokens": 8192,
                 "temperature": 0.7,
                 "topP": 0.95
             }
