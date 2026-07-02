@@ -57,7 +57,7 @@ No intro, no footer. Just pure analysis.
     headers = {"Content-Type": "application/json"}
     
     # Try models in order: pro first, then flash
-    models_to_try = ["gemini-2.5-pro", "gemini-2.5-flash"]
+    models_to_try = ["gemini-2.5-pro", "gemini-3.5-flash"]
     
     for model in models_to_try:
         print(f"🔄 Trying model: {model}...")
