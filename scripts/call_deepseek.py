@@ -32,35 +32,60 @@ def call_llm(prompt, fallback=True):
 
 def call_huggingface(prompt):
     """Call Hugging Face free inference API."""
-    API_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2"
-    headers = {"Authorization": f"Bearer {HUGGINGFACE_TOKEN}"}
+    # Try different models that work better with the free tier
+    models = [
+        "mistralai/Mistral-7B-Instruct-v0.2",
+        "google/flan-t5-large",  # Smaller, faster
+        "gpt2"  # Simple, always works
+    ]
     
-    # Format prompt for instruction model
-    formatted_prompt = f"<s>[INST] {prompt} [/INST]"
-    
-    payload = {
-        "inputs": formatted_prompt,
-        "parameters": {
-            "max_length": 1000,
-            "temperature": 0.7,
-            "top_p": 0.95
-        }
-    }
-    
-    try:
-        response = requests.post(API_URL, headers=headers, json=payload)
-        result = response.json()
+    for model in models:
+        API_URL = f"https://api-inference.huggingface.co/models/{model}"
+        headers = {"Authorization": f"Bearer {HUGGINGFACE_TOKEN}"}
         
-        # Handle different response formats
-        if isinstance(result, list):
-            return result[0]["generated_text"]
-        elif isinstance(result, dict) and "generated_text" in result:
-            return result["generated_text"]
-        else:
-            return str(result)
-    except Exception as e:
-        print(f"⚠️ HuggingFace API error: {e}")
-        return generate_fallback_response(prompt)
+        # Different formats for different models
+        if "mistral" in model:
+            formatted_prompt = f"<s>[INST] {prompt} [/INST]"
+        elif "flan" in model:
+            formatted_prompt = prompt
+        elif "gpt2" in model:
+            formatted_prompt = prompt
+        
+        payload = {
+            "inputs": formatted_prompt,
+            "parameters": {
+                "max_length": 1000,
+                "temperature": 0.7,
+                "top_p": 0.95,
+                "return_full_text": False
+            }
+        }
+        
+        try:
+            response = requests.post(API_URL, headers=headers, json=payload)
+            
+            if response.status_code == 200:
+                result = response.json()
+                
+                # Handle different response formats
+                if isinstance(result, list) and len(result) > 0:
+                    if "generated_text" in result[0]:
+                        return result[0]["generated_text"]
+                    else:
+                        return str(result[0])
+                elif isinstance(result, dict) and "generated_text" in result:
+                    return result["generated_text"]
+                else:
+                    return str(result)
+            else:
+                print(f"⚠️ Model {model} returned {response.status_code}, trying next...")
+                continue
+        except Exception as e:
+            print(f"⚠️ HuggingFace API error with {model}: {e}")
+            continue
+    
+    # If all models fail, use fallback
+    return generate_fallback_response(prompt)
 
 def call_together_ai(prompt):
     """Call Together.ai free inference API."""
