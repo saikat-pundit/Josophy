@@ -132,7 +132,8 @@ Keep the analysis exhaustive, highly analytical, and forward-looking. Maximize o
     models_to_try = [
     "gemini-1.5-pro",         # 1st Choice: Stable flagship model (Best Analysis)
     "gemini-1.5-pro-latest",  # 2nd Choice: Fallback to the bleeding-edge Pro model
-    "gemini-1.5-flash"        # 3rd Choice: Fast/Stable fallback if Pro hits rate limits
+    "gemini-1.5-flash",        # 3rd Choice: Fast/Stable fallback if Pro hits rate limits
+    "gemini-2.5-flash"
 ]
     
     for model in models_to_try:
