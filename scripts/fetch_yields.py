@@ -15,7 +15,9 @@ SERIES_MAP = {
     "2Y": "DGS2",
     "5Y": "DGS5",
     "10Y": "DGS10",
-    "30Y": "DGS30"
+    "30Y": "DGS30",
+    "DXY": "DXY",
+    "FEDFUNDS": "FEDFUNDS"
 }
 
 def fetch_yield(series_id, date=None):
@@ -138,7 +140,9 @@ def save_to_csv(yields_dict, filename="data/yield_history.csv"):
         "2Y": yields_dict.get("2Y"),
         "5Y": yields_dict.get("5Y"),
         "10Y": yields_dict.get("10Y"),
-        "30Y": yields_dict.get("30Y")
+        "30Y": yields_dict.get("30Y"),
+        "DXY": yields_dict.get("DXY"),
+        "FEDFUNDS": yields_dict.get("FEDFUNDS")
     }
     
     df_new = pd.DataFrame([row])
