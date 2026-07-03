@@ -33,6 +33,8 @@ def main():
         "5Y": latest['5Y'],
         "10Y": latest['10Y'],
         "30Y": latest['30Y'],
+        "DXY": latest.get('DXY'),
+        "FEDFUNDS": latest.get('FEDFUNDS'),
         "10Y_3M_spread": latest['10Y_3M_spread'],
         "10Y_2Y_spread": latest['10Y_2Y_spread'],
         "2Y_3M_spread": latest['2Y_3M_spread']
