@@ -17,6 +17,19 @@
   Positive but flat curve. Moderate expansion, watch for directional change.
 
 📋 AI ANALYSIS:
-⚠️ All Gemini models failed to generate analysis. Please check API key or try again later.
+The US economy currently navigates a complex macro landscape characterized by persistent inflation, a robust yet potentially decelerating labor market, and a Federal Reserve maintaining a "higher for longer" stance while subtly adjusting liquidity. The Treasury yield curve, particularly its significant flattening, telegraphs market expectations of this protracted environment, balancing immediate inflationary pressures with burgeoning concerns about future growth trajectory.
+
+## 1. MACROECONOMIC & LIQUIDITY TRENDS
+
+The macro data reveals a nuanced picture, signaling a regime of **Late Cycle / Stagflationary-Lite**.
+
+*   **Yield Curve Dynamics (MoM & YoY):** The 10Y yield, at 4.48%, has shown remarkable stability MoM (+0.01%) and a modest increase YoY (+0.08%). In stark contrast, the 2Y yield, at 4.17%, has seen a more pronounced rise, up +0.12% MoM and +0.27% YoY. This divergent movement underscores a significant **flattening of the yield curve**, indicating that the market is pricing in a "higher for longer" short-term rate environment, while long-term inflation expectations remain relatively anchored or future growth concerns cap the long end.
+*   **DXY (USD):** While current DXY data is unavailable, the 1M prior reading of 120.08 denotes a robust US Dollar. This strength reflects either strong safe-haven demand, attractive yield differentials, or relative economic outperformance, potentially dampening imported inflation but posing headwinds for export-oriented sectors.
+*   **M2 Money Supply (Trillions):** Specific MoM and YoY trends are absent from the pre-calculated data. The raw data point of 23.052 (late May) provides a snapshot, but without historical context, a definitive trend in broader money supply is difficult to ascertain.
+*   **Fed Balance Sheet - WALCL (Trillions):** The Federal Reserve's balance sheet, currently at 6.725 trillion, exhibits a subtle but notable increase over the last month (from ~6.704 to 6.725). This suggests a potential pause or deceleration in quantitative tightening (QT), injecting marginal liquidity into the financial system. This liquidity could provide a temporary floor for asset prices, but also risks sustaining inflationary pressures if not counterbalanced.
+*   **Labor Market:** The labor market remains exceptionally tight. The Unemployment Rate declined MoM from 4.3% to 4.2% (latest data), signaling continued strength. Nonfarm Payrolls (PAYEMS) also saw a modest increase from 158.927M to 158.984M over the month, corroborating this resilience. Average Hourly Earnings (AHE) also nudged higher from 37.51 to 37.64, indicating persistent wage growth and underlying inflationary momentum.
+*   **Inflation (CPI/PPI):** While MoM/YoY trends for CPI and PPI are not explicitly provided in the "Pre-calculated Historical Trends," the elevated absolute values (CPIAUCSL 333.979, PPIACO 292.504) combined with a tightening labor market and rising AHE strongly suggest that inflationary pressures are sticky and above the Fed's target.
+
+In summary, the current macro regime is characterized by a resilient economy facing sticky inflation, supported by subtle liquidity injections from the Fed, and navigating a "higher for
 ============================================================
-✅ 2026-07-03 07:17:24 | Gemini
+✅ 2026-07-03 07:27:19 | Gemini
