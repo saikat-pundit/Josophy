@@ -3,7 +3,7 @@ name: Update CSV Only (No AI)
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0 * * *'  # Runs once daily at midnight UTC
+    - cron: '0 0 * * *'
 
 jobs:
   update-csv:
@@ -13,8 +13,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -31,21 +29,11 @@ jobs:
           mkdir -p data
           mkdir -p reports
 
-      - name: Fetch and update CSV only
+      - name: Fetch and append new data to CSV
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
         run: |
-          python -c "
-import sys
-sys.path.append('scripts')
-from fetch_yields import fetch_missing_dates
-print('🚀 Fetching latest yield data...')
-df = fetch_missing_dates()
-if df is not None:
-    print(f'✅ CSV updated. Total rows: {len(df)}')
-else:
-    print('⚠️ No new data fetched.')
-"
+          python scripts/fetch_yields.py
 
       - name: Commit and push CSV changes
         env:
