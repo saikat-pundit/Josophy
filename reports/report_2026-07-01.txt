@@ -17,12 +17,6 @@
   Positive but flat curve. Moderate expansion, watch for directional change.
 
 📋 AI ANALYSIS:
-M: 3.85% vs 4.40% (-55 bps)
-        *   2Y: 4.17% vs 3.78% (+39 bps)
-        *   5Y: 4.24% vs 3.84% (+40 bps)
-        *   10Y: 4.48% vs 4.26% (+22 bps)
-        *   30Y: 4.97% vs 4.78% (+19 bps)
-
-8.  **Formulate Output**: Ensure tone is authoritative, highly professional, and deeply analytical. Avoid generic filler. Proceed to write.
+⚠️ All Gemini models failed to generate analysis. Please check API key or try again later.
 ============================================================
-✅ 2026-07-03 07:08:41 | Gemini
+✅ 2026-07-03 07:17:24 | Gemini
