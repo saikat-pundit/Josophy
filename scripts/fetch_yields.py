@@ -64,8 +64,12 @@ def fetch_missing_dates():
     if last_date is None:
         print("📅 No historical data found. Fetching all data from 2019...")
         # Run backfill for first time
-        from backfill_history import build_historical_csv
-        return build_historical_csv()
+        try:
+            from backfill_history import build_historical_csv
+            return build_historical_csv()
+        except ImportError:
+            print("⚠️ backfill_history.py not found. Please run backfill first.")
+            return None
     
     print(f"📅 Last recorded date: {last_date}")
     
@@ -107,6 +111,8 @@ def fetch_missing_dates():
     
     # Sort by date and remove duplicates
     df_combined = df_combined.sort_values("date").drop_duplicates(subset=["date"], keep="last")
+    
+    # ✅ FIX: Save the combined DataFrame back to CSV
     df_combined.to_csv(filename, index=False)
     
     print(f"✅ Added {len(new_data)} new rows. Total: {len(df_combined)} rows")
