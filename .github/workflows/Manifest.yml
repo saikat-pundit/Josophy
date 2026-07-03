@@ -33,8 +33,12 @@ jobs:
             echo "FILE: $file" >> manifest/files.txt
             echo "========================================" >> manifest/files.txt
             
+            # Check if file is in reports folder (including ./reports/)
+            if [[ "$file" == *"/reports/"* ]] || [[ "$file" == "./reports/"* ]] || [[ "$file" == "reports/"* ]]; then
+              # For files in reports folder, only show filename, not content
+              echo "[CONTENT OMITTED]" >> manifest/files.txt
             # Special handling for yield_history.csv - only show first 5 and last 5 rows
-            if [[ "$file" == *"data/yield_history.csv" ]]; then
+            elif [[ "$file" == *"data/yield_history.csv" ]]; then
               if [ -f "$file" ]; then
                 # Get total lines
                 total_lines=$(wc -l < "$file")
@@ -52,9 +56,6 @@ jobs:
               else
                 echo "[FILE NOT FOUND]" >> manifest/files.txt
               fi
-            elif [[ "$file" == reports/* ]]; then
-              # For files in reports folder, only show filename, not content
-              echo "[CONTENT OMITTED - REPORTS FOLDER]" >> manifest/files.txt
             else
               # For all other files, show full content
               cat "$file" 2>/dev/null >> manifest/files.txt || echo "[BINARY FILE]" >> manifest/files.txt
