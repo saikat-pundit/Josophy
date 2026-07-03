@@ -33,7 +33,6 @@ jobs:
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
         run: |
-          python scripts/migrate_csv_columns.py
           python scripts/fetch_yields.py
 
       - name: Commit and push CSV changes
