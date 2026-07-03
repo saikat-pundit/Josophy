@@ -124,15 +124,20 @@ def fetch_all_data():
     
     df_new = pd.DataFrame(new_rows)
     
-    # Convert to billions where needed
-    for col in ["M2SL", "WALCL", "GDP", "GFDEBTN"]:
+    # M2SL and GDP are in Billions. Divide by 1,000 to get Trillions.
+    for col in ["M2SL", "GDP"]:
         if col in df_new.columns:
-            df_new[col] = df_new[col] / 1000.0
+            df_new[col] = (df_new[col] / 1000.0).round(3)
+            
+    # WALCL and GFDEBTN are in Millions. Divide by 1,000,000 to get Trillions.
+    for col in ["WALCL", "GFDEBTN"]:
+        if col in df_new.columns:
+            df_new[col] = (df_new[col] / 1000000.0).round(3)
     
     # Convert PAYEMS and JTSJOL from thousands to millions
     for col in ["PAYEMS", "JTSJOL"]:
         if col in df_new.columns:
-            df_new[col] = df_new[col] / 1000.0
+            df_new[col] = (df_new[col] / 1000.0).round(3)
     
     # ✅ FIX: Keep daily yields intact, only group monthly/quarterly columns
     monthly_cols = ["M2SL", "CPIAUCSL", "PPIACO", "AHE", "UNRATE", "PAYEMS", "JTSJOL", "HOSINV", "GDP", "GFDEBTN"]
