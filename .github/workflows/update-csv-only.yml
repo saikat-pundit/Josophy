@@ -35,12 +35,16 @@ jobs:
         run: |
           python scripts/fetch_yields.py
 
-      - name: Commit and push CSV changes
+      - name: Commit and push CSV changes (if file exists)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add data/yield_history.csv
-          git diff --quiet && git diff --staged --quiet || git commit -m "Update CSV only $(date +'%Y-%m-%d')"
-          git push
+          if [ -f data/yield_history.csv ]; then
+            git add data/yield_history.csv
+            git diff --quiet && git diff --staged --quiet || git commit -m "Update CSV only $(date +'%Y-%m-%d')"
+            git push
+          else
+            echo "⚠️ data/yield_history.csv not found. Skipping commit."
+          fi
