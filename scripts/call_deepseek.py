@@ -129,7 +129,11 @@ Keep the analysis exhaustive, highly analytical, and forward-looking. Maximize o
 """
     headers = {"Content-Type": "application/json"}
     
-    models_to_try = ["gemini-1.5-pro-latest", "gemini-1.5-flash-latest"]
+    models_to_try = [
+    "gemini-1.5-pro",         # 1st Choice: Stable flagship model (Best Analysis)
+    "gemini-1.5-pro-latest",  # 2nd Choice: Fallback to the bleeding-edge Pro model
+    "gemini-1.5-flash"        # 3rd Choice: Fast/Stable fallback if Pro hits rate limits
+]
     
     for model in models_to_try:
         print(f"🔄 Trying model: {model}...")
