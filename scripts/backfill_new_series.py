@@ -90,12 +90,8 @@ def backfill_new_series():
         if col in df_new.columns:
             df_new[col] = df_new[col] / 1000.0
     
-    # Merge with existing CSV (align columns)
-    for col in df_new.columns:
-        if col not in df_existing.columns:
-            df_existing[col] = None
-    
-    df_combined = pd.merge(df_existing, df_new, on="date", how="outer")
+    # ✅ FIX: Use concat instead of merge to avoid duplicate columns
+    df_combined = pd.concat([df_existing, df_new], ignore_index=True)
     df_combined = df_combined.sort_values("date").drop_duplicates(subset=["date"], keep="last")
     df_combined.to_csv(filename, index=False)
     
