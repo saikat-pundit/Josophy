@@ -8,7 +8,7 @@ on:
 jobs:
   update-csv:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
 
     steps:
       - name: Checkout repository
@@ -24,10 +24,10 @@ jobs:
             echo "✅ data/yield_history.csv found. First 3 lines:"
             head -3 data/yield_history.csv
           else
-            echo "⚠️ data/yield_history.csv NOT found. Creating an empty one."
+            echo "⚠️ data/yield_history.csv NOT found. Creating empty CSV with full headers."
             mkdir -p data
-            echo "date,3M,2Y,5Y,10Y,30Y,DXY,FEDFUNDS,M2SL,WALCL" > data/yield_history.csv
-            echo "✅ Created empty CSV with correct headers."
+            echo "date,3M,2Y,5Y,10Y,30Y,DXY,FEDFUNDS,M2SL,WALCL,GDP,GFDEBTN,CPIAUCSL,PPIACO,AHE,UNRATE,PAYEMS,JTSJOL,HOSINV" > data/yield_history.csv
+            echo "✅ Created empty CSV with full headers."
           fi
 
       - name: Set up Python
@@ -45,22 +45,13 @@ jobs:
           mkdir -p data
           mkdir -p reports
 
-      - name: Run migration to create CSV (if missing)
-        run: |
-          if [ ! -f data/yield_history.csv ]; then
-            echo "📄 CSV not found. Running migration to create it..."
-            python scripts/migrate_csv_columns.py
-          else
-            echo "✅ CSV already exists."
-          fi
-
-      - name: Fetch and append new data to CSV
+      - name: Fetch all data (yields + macro)
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
         run: |
-          python scripts/backfill_new_series.py
-          python scripts/fetch_yields.py
-      - name: Commit and push CSV changes (if file exists)
+          python scripts/fetch_all_data.py
+
+      - name: Commit and push CSV changes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
