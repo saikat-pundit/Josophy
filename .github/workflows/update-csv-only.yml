@@ -1,0 +1,58 @@
+name: Update CSV Only (No AI)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'  # Runs once daily at midnight UTC
+
+jobs:
+  update-csv:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install pandas requests python-dotenv
+
+      - name: Create directories
+        run: |
+          mkdir -p data
+          mkdir -p reports
+
+      - name: Fetch and update CSV only
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+        run: |
+          python -c "
+import sys
+sys.path.append('scripts')
+from fetch_yields import fetch_missing_dates
+print('🚀 Fetching latest yield data...')
+df = fetch_missing_dates()
+if df is not None:
+    print(f'✅ CSV updated. Total rows: {len(df)}')
+else:
+    print('⚠️ No new data fetched.')
+"
+
+      - name: Commit and push CSV changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add data/yield_history.csv
+          git diff --quiet && git diff --staged --quiet || git commit -m "Update CSV only $(date +'%Y-%m-%d')"
+          git push
