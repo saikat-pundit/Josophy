@@ -9,16 +9,29 @@ load_dotenv()
 FRED_API_KEY = os.getenv("FRED_API_KEY")
 BASE_URL = "https://api.stlouisfed.org/fred/series/observations"
 
+# Complete series map with all new indicators
 SERIES_MAP = {
+    # Treasury yields
     "3M": "DGS3MO",
     "2Y": "DGS2",
     "5Y": "DGS5",
     "10Y": "DGS10",
     "30Y": "DGS30",
+    # Macro indicators
     "DXY": "TWEXBGSMTH",
     "FEDFUNDS": "RIFSPFFNB",
     "M2SL": "M2SL",
-    "WALCL": "WALCL"
+    "WALCL": "WALCL",
+    # New additions
+    "GDP": "GDP",
+    "GFDEBTN": "GFDEBTN",
+    "CPIAUCSL": "CPIAUCSL",
+    "PPIACO": "PPIACO",
+    "AHE": "CES0500000003",
+    "UNRATE": "UNRATE",
+    "PAYEMS": "PAYEMS",
+    "JTSJOL": "JTSJOL",
+    "HOSINV": "HOSINVUSM495N"
 }
 
 def fetch_bulk_series(series_id, start_date, end_date):
@@ -58,7 +71,12 @@ def fetch_missing_dates():
     
     # If CSV doesn't exist, create empty with headers
     if not os.path.exists(filename):
-        df_empty = pd.DataFrame(columns=["date", "3M", "2Y", "5Y", "10Y", "30Y", "DXY", "FEDFUNDS", "M2SL", "WALCL"])
+        df_empty = pd.DataFrame(columns=[
+            "date", "3M", "2Y", "5Y", "10Y", "30Y", 
+            "DXY", "FEDFUNDS", "M2SL", "WALCL",
+            "GDP", "GFDEBTN", "CPIAUCSL", "PPIACO", 
+            "AHE", "UNRATE", "PAYEMS", "JTSJOL", "HOSINV"
+        ])
         df_empty.to_csv(filename, index=False)
         print("✅ Created empty CSV with headers.")
     
@@ -104,8 +122,13 @@ def fetch_missing_dates():
     
     df_new = pd.DataFrame(new_rows)
     
-    # Convert millions to billions for M2SL and WALCL
-    for col in ["M2SL", "WALCL"]:
+    # Convert to billions where needed
+    for col in ["M2SL", "WALCL", "GDP", "GFDEBTN"]:
+        if col in df_new.columns:
+            df_new[col] = df_new[col] / 1000.0
+    
+    # Convert PAYEMS and JTSJOL from thousands to millions
+    for col in ["PAYEMS", "JTSJOL"]:
         if col in df_new.columns:
             df_new[col] = df_new[col] / 1000.0
     
@@ -130,7 +153,16 @@ def save_to_csv(yields_dict, filename="data/yield_history.csv"):
         "DXY": yields_dict.get("DXY"),
         "FEDFUNDS": yields_dict.get("FEDFUNDS"),
         "M2SL": yields_dict.get("M2SL"),
-        "WALCL": yields_dict.get("WALCL")
+        "WALCL": yields_dict.get("WALCL"),
+        "GDP": yields_dict.get("GDP"),
+        "GFDEBTN": yields_dict.get("GFDEBTN"),
+        "CPIAUCSL": yields_dict.get("CPIAUCSL"),
+        "PPIACO": yields_dict.get("PPIACO"),
+        "AHE": yields_dict.get("AHE"),
+        "UNRATE": yields_dict.get("UNRATE"),
+        "PAYEMS": yields_dict.get("PAYEMS"),
+        "JTSJOL": yields_dict.get("JTSJOL"),
+        "HOSINV": yields_dict.get("HOSINV")
     }
     df_new = pd.DataFrame([row])
     
