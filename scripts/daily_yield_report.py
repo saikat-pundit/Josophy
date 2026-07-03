@@ -2,15 +2,16 @@ import os
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from fetch_yields import fetch_missing_dates, load_history
+# ✅ FIX: Changed import from the missing 'fetch_yields' to 'fetch_all_data'
+from fetch_all_data import fetch_all_data, load_history
 from analyze_regime import compute_spreads, classify_regime
 from call_deepseek import generate_daily_report
 
 def main():
     print("🚀 Starting daily yield curve report...")
     
-    # Fetch only missing data (smart incremental update)
-    df = fetch_missing_dates()
+    # ✅ FIX: Use the correct function to load/update data
+    df = fetch_all_data()
     
     if df is None or df.empty:
         print("❌ Failed to fetch yield data. Check FRED API key.")
