@@ -30,7 +30,7 @@ SERIES_MAP = {
     "UNRATE": "UNRATE",
     "PAYEMS": "PAYEMS",
     "JTSJOL": "JTSJOL",
-    "HOSINV": "HOSINVUSM495N",
+    "HOSINV": "MSACSR",
     # Quarterly
     "GDP": "GDP",
     "GFDEBTN": "GFDEBTN"
