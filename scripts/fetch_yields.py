@@ -59,7 +59,8 @@ def get_last_recorded_date(filename="data/yield_history.csv"):
     
     df = pd.read_csv(filename)
     if df.empty:
-        return None
+        # Return a dummy date so fetch_missing_dates() starts from 2019-01-01
+        return "2019-01-01"
     
     last_date = df["date"].max()
     return last_date
@@ -98,9 +99,12 @@ def fetch_missing_dates():
     filename = "data/yield_history.csv"
     last_date = get_last_recorded_date(filename)
     
-    if last_date is None:
+        if last_date is None:
         print("❌ No existing CSV found. Please run migration first or re‑create the file.")
         return None
+    
+    if last_date == "2019-01-01":
+        print("📅 CSV is empty. Starting fetch from 2019-01-01...")
     
     print(f"📅 Last recorded date: {last_date}")
     
