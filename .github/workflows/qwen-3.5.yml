@@ -8,7 +8,7 @@ on:
 
 # Unique concurrency group prevents this workflow from colliding with itself
 concurrency:
-  group: deepseek-report-${{ github.ref }}
+  group: OpenAI-report-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
