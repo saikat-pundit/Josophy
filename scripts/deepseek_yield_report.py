@@ -33,7 +33,7 @@ def main():
     latest_date = df['date'].iloc[-1]
     date_str = latest_date.strftime('%Y-%m-%d')
 
-    # 3. Smart Historical Calculator (Handles Daily, Monthly, and Quarterly data)
+    # 3. Smart Historical Calculator (Now with CAGR & Momentum tracking)
     def get_historical_metric(col, is_rate=False):
         if col not in df.columns:
             return f"{col}: N/A"
@@ -43,10 +43,8 @@ def main():
             
         curr_val = valid_df[col].iloc[-1]
         
-        # Helper to find closest date looking backwards
         def get_val_at(months_back):
             target_date = latest_date - relativedelta(months=months_back)
-            # Find the closest valid data point on or before the target date
             past_df = valid_df[valid_df['date'] <= target_date]
             if not past_df.empty:
                 return past_df[col].iloc[-1]
@@ -57,20 +55,25 @@ def main():
         val_1y = get_val_at(12)
         val_2y = get_val_at(24)
         
-        def calc_change(past_val):
+        def calc_change(past_val, months_back):
             if past_val is None or past_val == 0: return "N/A"
             if is_rate:
                 bps = (curr_val - past_val) * 100
+                if months_back == 24:
+                    return f"{'+' if bps > 0 else ''}{bps:.0f} bps total ({'+' if bps/2 > 0 else ''}{bps/2:.0f} bps annualized)"
                 return f"{'+' if bps > 0 else ''}{bps:.0f} bps"
             else:
                 pct = ((curr_val - past_val) / past_val) * 100
+                if months_back == 24:
+                    cagr = (((curr_val / past_val) ** 0.5) - 1) * 100
+                    return f"{'+' if cagr > 0 else ''}{cagr:.2f}% CAGR"
                 return f"{'+' if pct > 0 else ''}{pct:.2f}%"
 
-        return f"Current: {curr_val:.2f} | MoM: {calc_change(val_1m)} | QoQ: {calc_change(val_1q)} | YoY: {calc_change(val_1y)} | 2-Year: {calc_change(val_2y)}"
+        return f"Current: {curr_val:.2f} | MoM: {calc_change(val_1m, 1)} | QoQ: {calc_change(val_1q, 3)} | YoY: {calc_change(val_1y, 12)} | 2-Year: {calc_change(val_2y, 24)}"
 
     # 4. Generate Pre-Calculated Growth Metrics
     macro_trends = f"""
-    --- 2-YEAR GROWTH & RATE TRAJECTORIES (MoM, QoQ, YoY, 2-Year) ---
+    --- GROWTH & RATE TRAJECTORIES (MoM, QoQ, YoY, 2-Year CAGR) ---
     
     YIELDS & RATES (Changes in Basis Points):
     3M Yield: {get_historical_metric('3M', is_rate=True)}
@@ -97,14 +100,13 @@ def main():
     Fed Balance Sheet (WALCL): {get_historical_metric('WALCL')}
     """
 
-    # Extract exactly 2 years of raw historical data
     two_years_ago = latest_date - relativedelta(years=2)
     df_last_2_years = df[df['date'] >= two_years_ago]
     raw_2y_data_str = df_last_2_years.to_string(index=False)
 
     # 5. The Highly Constrained Prompt
     prompt = f"""
-    You are a top-tier macro strategist. I have pre-calculated the exact growth trajectories (MoM, QoQ, YoY, 2-Year) for the US economy, bond yields, and labor market, AND I am providing the raw 2-year timeline.
+    You are a top-tier macro strategist writing for an institutional client. I have pre-calculated the exact growth trajectories (MoM, QoQ, YoY, 2-Year CAGR) for the US economy, bond yields, and labor market, AND I am providing the raw 2-year timeline.
     
     DATA TRAJECTORIES:
     {macro_trends}
@@ -115,20 +117,24 @@ def main():
     Your mandate is to provide a complete, vivid, and highly authentic 360° analysis.
 
     STRICT RULES FOR YOUR OUTPUT:
-    1. NO RAW DATA DUMPING: Never just list out numbers or say "CPI is at X". You must WEAVE the growth percentages and basis point changes naturally into your sentences to prove a trend.
-    2. ASSET CLASS PREFERENCES (CRITICAL): For Equities, Bonds, Gold, Commodities, and FX, you MUST explicitly state what to "PREFER" (e.g., sectors, specific bond tenors, specific currencies) and what to "AVOID". Every preference/avoidance MUST be immediately justified using the provided growth/inflation/liquidity data.
-    3. THE HUMAN ANGLE (Crucial): You MUST dedicate analysis to how the "Main Street" human is faring. Explicitly compare Average Hourly Earnings (wage growth) against CPI (inflation). Is their real purchasing power growing or shrinking? How is the current unemployment rate, combined with mortgage rates (implied by 10Y/30Y yields), impacting housing supply (HOSINV) and general consumer sentiment?
-    4. NO JARGON EXPLANATIONS: Do not define terms. Assume the reader is institutional.
-    5. BE PRECISE & EXHAUSTIVE: Ensure all 9 sections below are covered with dense, insightful logic.
-
+    1. TONE & LUCIDITY: Your language must be lucid, direct, and accessible. Write like a seasoned Wall Street strategist—crisp and insightful, but easy to read. Do not use overly flowery prose or dramatic metaphors. Never explain economic jargon.
+    2. ADVANCED DATA WEAVING: Do not just quote raw numbers. You MUST use the provided CAGR (Compound Annual Growth Rate) or annualized basis points to describe the long-term trend, and juxtapose it directly against recent MoM or QoQ momentum to show if the trend is accelerating, stalling, or reversing. 
+    3. ASSET CLASS OUTLOOK & PREFERENCES (CRITICAL): For Equities, Bonds, Gold, Commodities, and FX, you MUST follow a two-part structure: 
+       - First, provide a concise, Current scenarios and forward-looking forecast for the sector. 
+       - Second, explicitly list what to "PREFER" and what to "AVOID" with a crisp rationale tied to the data. While analysing always look yield curve, Yield Spread , Histocial Precedence. Dont Just look one single data points compare it with other available data points to find the. A perfect comperative analysis.
+    4. THE HUMAN ANGLE: Explicitly compare Average Hourly Earnings (wage growth) against CPI (inflation). Is Main Street's real purchasing power growing or shrinking? How is the current unemployment rate, combined with mortgage rates (implied by 10Y/30Y yields), impacting housing supply (HOSINV)?
+    5. In Scenario Sections, discuss all three Base / Bull / Bear case with probability and reasoning according to past history. Must be SHORT and SPOT-on
+    6. Actionable Strategy discuss:- Risky / Conservative / Balanced Investor strategy with reasoning and precise
+    7. In macro economincs always take a look at 30Y - 2Y Spread (Global Liquidity Proxy) , 10Y - 2Y Spread (Federal Policy & Risk Sentiment) , 10Y - 3M Spread (Recession Inversion Warning), 30Y - 5Y Spread (Long-Term Bond Curve)
+    
     Structure your response exactly as follows:
     1. MACROECONOMIC & LIQUIDITY TRENDS
     2. YIELD OUTLOOK (Short/Medium/Long)
-    3. EQUITIES (Must include Prefer/Avoid sectors)
-    4. BONDS (Must include Prefer/Avoid tenors)
-    5. GOLD & PRECIOUS METALS (Must include Prefer/Avoid)
-    6. COMMODITIES (Must include Prefer/Avoid)
-    7. CASH & FX (Must include Prefer/Avoid pairs)
+    3. EQUITIES
+    4. BONDS
+    5. GOLD & PRECIOUS METALS
+    6. COMMODITIES
+    7. CASH & FX
     8. PORTFOLIO MIX, SCENARIOS & ACTIONABLE STRATEGY
     9. THE HUMAN ANGLE (Wages, Real Earnings, & Housing)
     """
@@ -136,18 +142,16 @@ def main():
     print(f"🔄 Requesting analysis from deepseek-v4-pro (Streaming) for {date_str}...")
 
     try:
-        # 6. DeepSeek-v4-pro execution with stream=True
         completion = client.chat.completions.create(
             model="deepseek-ai/deepseek-v4-pro",
             messages=[{"role": "user", "content": prompt}],
-            temperature=1.0,  # Elevated for creative/dynamic market narratives
+            temperature=0.8,  # Slightly lowered to keep the tone lucid and precise rather than overly creative
             top_p=0.95,
-            max_tokens=16384,
-            extra_body={"chat_template_kwargs": {"thinking": False}},
+            max_tokens=30000,
+            extra_body={"chat_template_kwargs": {"thinking": True}},
             stream=True
         )
         
-        # 7. Handle the stream and aggregate silently (keeps Actions logs clean)
         analysis_content = ""
         for chunk in completion:
             if chunk.choices[0].delta.content:
@@ -155,7 +159,6 @@ def main():
 
         print("✅ Analysis generated successfully. Saving report...")
 
-        # 8. Format and save output
         report = f"============================================================\n"
         report += f"📅 YIELD CURVE DAILY REPORT (DEEPSEEK PRO) - {date_str}\n"
         report += f"============================================================\n\n"
