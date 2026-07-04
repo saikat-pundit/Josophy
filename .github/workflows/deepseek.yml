@@ -3,7 +3,7 @@ name: DeepSeek v4 Daily Macro Report
 on:
   schedule:
     # Runs at 5:00 AM UTC every single day (Sunday to Saturday)
-    - cron: '0 5 * * *'
+    - cron: '0 23 * * *'
   workflow_dispatch:
 
 # Unique concurrency group prevents this workflow from colliding with itself
