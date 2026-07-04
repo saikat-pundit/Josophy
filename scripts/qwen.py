@@ -151,7 +151,7 @@ def main():
 
     try:
         completion = client.chat.completions.create(
-            model="qwen/qwen3.5-122b-a10b",
+            model="qwen/qwen3.5-397b-a17b",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.60, 
             top_p=0.95,
