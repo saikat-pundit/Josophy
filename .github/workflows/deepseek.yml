@@ -2,8 +2,8 @@ name: DeepSeek v4 Daily Macro Report
 
 on:
   schedule:
-    # Runs at 5:00 AM UTC, Monday-Friday (30 minutes after Gemini)
-    - cron: '0 5 * * 1-5'
+    # Runs at 5:00 AM UTC every single day (Sunday to Saturday)
+    - cron: '0 5 * * *'
   workflow_dispatch:
 
 # Unique concurrency group prevents this workflow from colliding with itself
@@ -41,13 +41,25 @@ jobs:
         mkdir -p reports
         
     - name: Fetch full historical data
+      id: fetch_step
       env:
         FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
       run: |
         echo "📅 Ensuring data is up to date..."
         python scripts/fetch_all_data.py
         
+        # Check if the data directory has changes (new rows appended)
+        git status --short data/
+        if git diff --quiet data/; then
+          echo "📊 No new macro data detected. Skipping AI report generation."
+          echo "new_data=false" >> $GITHUB_OUTPUT
+        else
+          echo "🔥 New macro rows appended. Proceeding to AI analysis."
+          echo "new_data=true" >> $GITHUB_OUTPUT
+        fi
+        
     - name: Run parallel DeepSeek yield report
+      if: steps.fetch_step.outputs.new_data == 'true'
       env:
         NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
       run: |
@@ -60,5 +72,11 @@ jobs:
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
         git add data/ reports/
-        git diff --quiet && git diff --staged --quiet || git commit -m "DeepSeek daily yield report $(date +'%Y-%m-%d %H:%M:%S')"
-        git push
+        
+        # Only commit and push if there are actual modifications saved
+        if ! git diff --quiet || ! git diff --staged --quiet; then
+          git commit -m "DeepSeek daily yield report $(date +'%Y-%m-%d %H:%M:%S')"
+          git push
+        else
+          echo "📁 No changes to commit."
+        fi
