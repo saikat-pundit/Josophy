@@ -155,7 +155,7 @@ def main():
             messages=[{"role": "user", "content": prompt}],
             temperature=0.60, 
             top_p=0.95,
-            max_tokens=16384,
+            max_tokens=30000,
             stream=True
         )
         
