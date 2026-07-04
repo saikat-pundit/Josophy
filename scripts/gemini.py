@@ -1,9 +1,17 @@
 import os
+import sys
 from datetime import datetime
 from dotenv import load_dotenv
 import requests
 import pandas as pd
 from dateutil.relativedelta import relativedelta
+
+# Ensure the scripts directory is in the path for custom imports
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+# Custom modules
+from fetch_all_data import fetch_all_data, load_history
+from analyze_regime import compute_spreads, classify_regime
 
 load_dotenv()
 
@@ -225,3 +233,69 @@ def generate_daily_report(yields, regime, confidence, explanation, history_df):
 ============================================================
 ✅ {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} | Gemini
 """
+
+def main():
+    print("🚀 Starting daily yield curve report (Gemini)...")
+    
+    df = fetch_all_data()
+    
+    if df is None or df.empty:
+        print("❌ Failed to fetch yield data. Check FRED API key.")
+        return
+    
+    # Compute spreads
+    df = compute_spreads(df)
+    
+    # Get latest data
+    latest = df.iloc[-1]
+    date = latest['date']
+    
+    print(f"📅 Using latest available data: {date}")
+    
+    # Prepare yields dict
+    yields = {
+        "date": date,
+        "3M": latest['3M'],
+        "2Y": latest['2Y'],
+        "5Y": latest['5Y'],
+        "10Y": latest['10Y'],
+        "30Y": latest['30Y'],
+        "DXY": latest.get('DXY'),
+        "FEDFUNDS": latest.get('FEDFUNDS'),
+        "10Y_3M_spread": latest['10Y_3M_spread'],
+        "10Y_2Y_spread": latest['10Y_2Y_spread'],
+        "2Y_3M_spread": latest['2Y_3M_spread'],
+        "EXPINF1YR": latest.get('EXPINF1YR'),
+        "EXPINF2YR": latest.get('EXPINF2YR'),
+        "EXPINF3YR": latest.get('EXPINF3YR'),
+        "EXPINF5YR": latest.get('EXPINF5YR'),
+        "EXPINF10YR": latest.get('EXPINF10YR')
+    }
+    
+    # Classify regime
+    regime, confidence, explanation = classify_regime(latest, df)
+    
+    # Generate report
+    report = generate_daily_report(
+        yields=yields,
+        regime=regime,
+        confidence=confidence,
+        explanation=explanation,
+        history_df=df
+    )
+    
+    # Print report
+    print(report)
+    
+    # Save report
+    report_dir = "reports"
+    os.makedirs(report_dir, exist_ok=True)
+    report_file = f"{report_dir}/gemini_report_{date}.txt"
+    
+    with open(report_file, 'w') as f:
+        f.write(report)
+    print(f"📄 Report saved to: {report_file}")
+    print("✅ Done!")
+
+if __name__ == "__main__":
+    main()
