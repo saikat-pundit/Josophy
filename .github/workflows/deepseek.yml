@@ -76,6 +76,9 @@ jobs:
         # Only commit and push if there are actual modifications saved
         if ! git diff --quiet || ! git diff --staged --quiet; then
           git commit -m "DeepSeek daily yield report $(date +'%Y-%m-%d %H:%M:%S')"
+          
+          # ✅ FIX: Pull any changes that happened while the AI was generating before pushing
+          git pull --rebase origin main
           git push
         else
           echo "📁 No changes to commit."
