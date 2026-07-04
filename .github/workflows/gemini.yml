@@ -59,12 +59,12 @@ jobs:
         fi
         
     - name: Run daily yield report
-      if: steps.fetch_step.outputs.new_data == 'true'  # <-- Will only run if new data exists
+      if: steps.fetch_step.outputs.new_data == 'true'
       env:
         FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
         GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       run: |
-        python scripts/daily_yield_report.py
+        python scripts/gemini.py
         
     - name: Commit and push changes
       env:
