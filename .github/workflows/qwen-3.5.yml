@@ -1,0 +1,85 @@
+name: Qwen 3.5 Daily Macro Report
+
+on:
+  schedule:
+    # Runs at 5:00 AM UTC every single day (Sunday to Saturday)
+    - cron: '0 23 * * *'
+  workflow_dispatch:
+
+# Unique concurrency group prevents this workflow from colliding with itself
+concurrency:
+  group: deepseek-report-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  generate-deepseek-report:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 1
+      
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+        cache: 'pip' 
+        
+    - name: Install dependencies
+      run: |
+        pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Create directories
+      run: |
+        mkdir -p data
+        mkdir -p reports
+        
+    - name: Fetch full historical data
+      id: fetch_step
+      env:
+        FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+      run: |
+        echo "📅 Ensuring data is up to date..."
+        python scripts/fetch_all_data.py
+        
+        # Check if the data directory has changes (new rows appended)
+        git status --short data/
+        if git diff --quiet data/; then
+          echo "📊 No new macro data detected. Skipping AI report generation."
+          echo "new_data=false" >> $GITHUB_OUTPUT
+        else
+          echo "🔥 New macro rows appended. Proceeding to AI analysis."
+          echo "new_data=true" >> $GITHUB_OUTPUT
+        fi
+        
+    - name: Run parallel DeepSeek yield report
+      if: steps.fetch_step.outputs.new_data == 'true'
+      env:
+        NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+      run: |
+        python scripts/qwen.py
+        
+    - name: Commit and push changes
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add data/ reports/
+        
+        # Only commit and push if there are actual modifications saved
+        if ! git diff --quiet || ! git diff --staged --quiet; then
+          git commit -m "DeepSeek daily yield report $(date +'%Y-%m-%d %H:%M:%S')"
+          
+          # ✅ FIX: Pull any changes that happened while the AI was generating before pushing
+          git pull --rebase origin main
+          git push
+        else
+          echo "📁 No changes to commit."
+        fi
