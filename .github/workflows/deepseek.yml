@@ -48,18 +48,21 @@ jobs:
         echo "📅 Ensuring data is up to date..."
         python scripts/fetch_all_data.py
         
-        # Check if the data directory has changes (new rows appended)
-        git status --short data/
-        if git diff --quiet data/; then
-          echo "📊 No new macro data detected. Skipping AI report generation."
-          echo "new_data=false" >> $GITHUB_OUTPUT
+        # 1. Extract the very last date from the CSV (grabs the last row, splits by comma, gets first column)
+        LAST_DATE=$(tail -n 1 data/yield_history.csv | cut -d',' -f1)
+        echo "Latest date in CSV is: $LAST_DATE"
+        
+        # 2. Check if the AI report for this specific date already exists
+        if [ -f "reports/deepseek_report_${LAST_DATE}.txt" ]; then
+          echo "📊 deepseek_report_${LAST_DATE}.txt already exists. Skipping AI generation."
+          echo "run_ai=false" >> $GITHUB_OUTPUT
         else
-          echo "🔥 New macro rows appended. Proceeding to AI analysis."
-          echo "new_data=true" >> $GITHUB_OUTPUT
+          echo "🔥 Report for $LAST_DATE is missing. Proceeding to AI analysis."
+          echo "run_ai=true" >> $GITHUB_OUTPUT
         fi
         
-    - name: Run parallel DeepSeek yield report
-      if: steps.fetch_step.outputs.new_data == 'true'
+    - name: Run parallel Qwen yield report
+      if: steps.fetch_step.outputs.run_ai == 'true'
       env:
         NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
       run: |
