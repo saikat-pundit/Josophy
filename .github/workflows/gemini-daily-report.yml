@@ -1,4 +1,4 @@
-name: Daily Yield Curve Report
+name: Gemini Daily Macro_Report
 
 on:
   schedule:
