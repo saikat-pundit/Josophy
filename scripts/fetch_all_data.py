@@ -243,5 +243,3 @@ __all__ = [
     'save_to_csv',
     'load_history'
 ]
-
-```
