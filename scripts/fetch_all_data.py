@@ -22,6 +22,7 @@ SERIES_MAP = {
     "FEDFUNDS": "RIFSPFFNB",
     # Weekly
     "WALCL": "WALCL",
+    "CCLACBW027SBOG": "CCLACBW027SBOG", # Consumer Loans
     # Monthly Macro
     "M2SL": "M2SL",
     "CPIAUCSL": "CPIAUCSL",
@@ -31,6 +32,9 @@ SERIES_MAP = {
     "PAYEMS": "PAYEMS",
     "JTSJOL": "JTSJOL",
     "HOSINV": "MSACSR",
+    "PCEPI": "PCEPI",                     # Personal Consumption Expenditures Price Index
+    "PCEPILFE": "PCEPILFE",               # CORE PCE
+    "PSAVERT": "PSAVERT",                 # Personal Saving Rate
     # Inflation Expectations (Monthly)
     "EXPINF1YR": "EXPINF1YR",
     "EXPINF2YR": "EXPINF2YR",
@@ -39,7 +43,11 @@ SERIES_MAP = {
     "EXPINF10YR": "EXPINF10YR",
     # Quarterly
     "GDP": "GDP",
-    "GFDEBTN": "GFDEBTN"
+    "GFDEBTN": "GFDEBTN",
+    "DPCCRV1Q225SBEA": "DPCCRV1Q225SBEA", # PCE Core Quarterly Growth
+    "DRCCLACBS": "DRCCLACBS",             # Delinquency Rate: Credit Cards
+    "DRCLACBS": "DRCLACBS",               # Delinquency Rate: Consumer Loans
+    "DRBLACBS": "DRBLACBS"                # Delinquency Rate: Business Loans
 }
 
 def fetch_bulk_series(series_id, start_date, end_date):
@@ -74,7 +82,7 @@ def get_last_recorded_date(filename="data/yield_history.csv"):
     return df["date"].max()
 
 def fetch_all_data():
-    """Fetch all data (yields + macro + inflation expectations) from 2019-01-01 to today."""
+    """Fetch all data (yields + macro + inflation expectations + new indicators) from 2019-01-01 to today."""
     filename = "data/yield_history.csv"
     
     # If CSV doesn't exist, create empty with full headers
@@ -84,7 +92,9 @@ def fetch_all_data():
             "DXY", "FEDFUNDS", "M2SL", "WALCL",
             "GDP", "GFDEBTN", "CPIAUCSL", "PPIACO", 
             "AHE", "UNRATE", "PAYEMS", "JTSJOL", "HOSINV",
-            "EXPINF1YR", "EXPINF2YR", "EXPINF3YR", "EXPINF5YR", "EXPINF10YR"
+            "EXPINF1YR", "EXPINF2YR", "EXPINF3YR", "EXPINF5YR", "EXPINF10YR",
+            "PCEPI", "PCEPILFE", "DPCCRV1Q225SBEA", "PSAVERT", 
+            "DRCCLACBS", "DRCLACBS", "DRBLACBS", "CCLACBW027SBOG"
         ])
         df_empty.to_csv(filename, index=False)
         print("✅ Created empty CSV with headers.")
@@ -157,10 +167,11 @@ def fetch_all_data():
         if col in df_new.columns:
             df_new[col] = (df_new[col] / 1000.0).round(3)
     
-    # ✅ INCLUDED: Inflation expectation indicators alongside standard monthly/quarterly metrics
+    # ✅ INCLUDED: Monthly and Quarterly metrics filter list
     monthly_cols = [
         "M2SL", "CPIAUCSL", "PPIACO", "AHE", "UNRATE", "PAYEMS", "JTSJOL", "HOSINV", "GDP", "GFDEBTN",
-        "EXPINF1YR", "EXPINF2YR", "EXPINF3YR", "EXPINF5YR", "EXPINF10YR"
+        "EXPINF1YR", "EXPINF2YR", "EXPINF3YR", "EXPINF5YR", "EXPINF10YR",
+        "PCEPI", "PCEPILFE", "PSAVERT", "DPCCRV1Q225SBEA", "DRCCLACBS", "DRCLACBS", "DRBLACBS"
     ]
     
     # For monthly/quarterly columns: keep only last day of each month
@@ -209,7 +220,15 @@ def save_to_csv(yields_dict, filename="data/yield_history.csv"):
         "EXPINF2YR": yields_dict.get("EXPINF2YR"),
         "EXPINF3YR": yields_dict.get("EXPINF3YR"),
         "EXPINF5YR": yields_dict.get("EXPINF5YR"),
-        "EXPINF10YR": yields_dict.get("EXPINF10YR")
+        "EXPINF10YR": yields_dict.get("EXPINF10YR"),
+        "PCEPI": yields_dict.get("PCEPI"),
+        "PCEPILFE": yields_dict.get("PCEPILFE"),
+        "DPCCRV1Q225SBEA": yields_dict.get("DPCCRV1Q225SBEA"),
+        "PSAVERT": yields_dict.get("PSAVERT"),
+        "DRCCLACBS": yields_dict.get("DRCCLACBS"),
+        "DRCLACBS": yields_dict.get("DRCLACBS"),
+        "DRBLACBS": yields_dict.get("DRBLACBS"),
+        "CCLACBW027SBOG": yields_dict.get("CCLACBW027SBOG")
     }
     df_new = pd.DataFrame([row])
     
