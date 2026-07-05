@@ -24,7 +24,7 @@ jobs:
       
       - name: Run FO Position script
         run: |
-          python script/FO_Position.py
+          python scripts/FO_Position.py
       
       - name: Commit and push if changes
         run: |
