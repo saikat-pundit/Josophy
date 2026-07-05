@@ -22,13 +22,8 @@ def fetch_usdinr_data(start_date, end_date):
     }
     
     try:
-        print(f"Fetching USDINR from {start_date} to {end_date}...")
         response = requests.get(url, headers=headers, timeout=15)
-        print(f"Status code: {response.status_code}")
-        print(f"Content-Type: {response.headers.get('Content-Type')}")
-        
         if response.status_code != 200:
-            print(f"Response: {response.text[:500]}")
             return {}
         
         # Remove BOM and parse CSV
@@ -36,21 +31,15 @@ def fetch_usdinr_data(start_date, end_date):
         if text.startswith('\ufeff'):
             text = text[1:]  # Remove BOM
         
-        # Parse CSV
         usdinr_data = {}
         lines = text.strip().split('\n')
         
-        # Get headers from first line (remove quotes and spaces)
-        header_line = lines[0].strip()
-        headers = [h.strip().strip('"') for h in header_line.split(',')]
-        print(f"Cleaned headers: {headers}")
-        
-        # Parse data rows
+        # Skip header line (index 0)
         for line in lines[1:]:
             if not line.strip():
                 continue
             values = [v.strip().strip('"') for v in line.split(',')]
-            if len(values) != len(headers):
+            if len(values) < 2:
                 continue
             
             date_str = values[0]  # Trade Date
@@ -61,14 +50,12 @@ def fetch_usdinr_data(start_date, end_date):
                     usdinr_value = values[1]  # 1 USD
                     if usdinr_value:
                         usdinr_data[date_key] = float(usdinr_value)
-                        print(f"Date: {date_key}, USDINR: {usdinr_value}")
-                except Exception as e:
-                    print(f"Date parsing error for {date_str}: {e}")
+                except:
                     continue
         
         return usdinr_data
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"Error fetching USDINR: {e}")
         return {}
 
 def main():
