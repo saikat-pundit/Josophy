@@ -90,6 +90,8 @@ def fetch_and_process(date_str, nifty_data, banknifty_data):
         # Skip first row (header with description)
         header_line = lines[1].strip()
         headers = [h.strip() for h in header_line.split(',')]
+        # Remove last 2 columns from header
+        headers = headers[:-2]  # <--- FIX: Strip last 2 columns
         # Add DATE, NIFTY50, BANK NIFTY columns
         new_headers = ['DATE', 'NIFTY50', 'BANK NIFTY'] + headers
         
@@ -101,11 +103,13 @@ def fetch_and_process(date_str, nifty_data, banknifty_data):
             if not line.strip():
                 continue
             values = [v.strip() for v in line.split(',')]
-            if len(values) != len(headers):
+            if len(values) != len(headers) + 2:  # Original has 2 extra columns
                 continue
             # Skip if the row is TOTAL (last row)
             if values[0].upper() == 'TOTAL':
                 continue
+            # Remove last 2 columns from data row
+            values = values[:-2]  # <--- FIX: Strip last 2 columns
             # Add date and index values to the beginning
             new_row = [date_str, nifty_close, banknifty_close] + values
             rows.append(new_row)
@@ -123,7 +127,7 @@ def fetch_and_process(date_str, nifty_data, banknifty_data):
         return None
 
 def main():
-    start_date = "01072026"
+    start_date = "01122025"
     end_date = datetime.now().strftime("%d%m%Y")
     
     # Convert dates for index API (DD-MM-YYYY format)
