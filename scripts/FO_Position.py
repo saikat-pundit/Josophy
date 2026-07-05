@@ -1,3 +1,4 @@
+# script/FO_Position.py
 import requests
 import csv
 from datetime import datetime, timedelta
@@ -91,7 +92,7 @@ def fetch_and_process(date_str, nifty_data, banknifty_data):
         header_line = lines[1].strip()
         headers = [h.strip() for h in header_line.split(',')]
         # Remove last 2 columns from header
-        headers = headers[:-2]  # <--- FIX: Strip last 2 columns
+        headers = headers[:-2]
         # Add DATE, NIFTY50, BANK NIFTY columns
         new_headers = ['DATE', 'NIFTY50', 'BANK NIFTY'] + headers
         
@@ -103,13 +104,13 @@ def fetch_and_process(date_str, nifty_data, banknifty_data):
             if not line.strip():
                 continue
             values = [v.strip() for v in line.split(',')]
-            if len(values) != len(headers) + 2:  # Original has 2 extra columns
+            if len(values) != len(headers) + 2:
                 continue
             # Skip if the row is TOTAL (last row)
             if values[0].upper() == 'TOTAL':
                 continue
             # Remove last 2 columns from data row
-            values = values[:-2]  # <--- FIX: Strip last 2 columns
+            values = values[:-2]
             # Add date and index values to the beginning
             new_row = [date_str, nifty_close, banknifty_close] + values
             rows.append(new_row)
@@ -126,9 +127,47 @@ def fetch_and_process(date_str, nifty_data, banknifty_data):
         print(f"{date_str}: error - {e}")
         return None
 
+def get_last_recorded_date():
+    output_file = 'data/FO_Position.csv'
+    if not os.path.exists(output_file):
+        return None
+    
+    try:
+        with open(output_file, 'r') as f:
+            reader = csv.reader(f)
+            rows = list(reader)
+            if len(rows) <= 1:  # Only header or empty
+                return None
+            # Get the last row's DATE column (first column)
+            last_row = rows[-1]
+            return last_row[0] if last_row else None
+    except Exception as e:
+        print(f"Error reading last date: {e}")
+        return None
+
 def main():
-    start_date = "01122025"
+    output_file = 'data/FO_Position.csv'
+    
+    # Get last recorded date from existing CSV
+    last_date = get_last_recorded_date()
+    
+    if last_date:
+        # Start from the day after last recorded date
+        last_date_obj = datetime.strptime(last_date, "%d%m%Y")
+        start_date = (last_date_obj + timedelta(days=1)).strftime("%d%m%Y")
+        print(f"Last recorded date: {last_date}")
+        print(f"Fetching from: {start_date}")
+    else:
+        # If no existing data, start from Dec 1, 2025
+        start_date = "01122025"
+        print(f"No existing data. Fetching from: {start_date}")
+    
     end_date = datetime.now().strftime("%d%m%Y")
+    
+    # If start_date > end_date, nothing to fetch
+    if datetime.strptime(start_date, "%d%m%Y") > datetime.strptime(end_date, "%d%m%Y"):
+        print("No new data to fetch. Already up to date.")
+        sys.exit(0)
     
     # Convert dates for index API (DD-MM-YYYY format)
     start_date_api = datetime.strptime(start_date, "%d%m%Y").strftime("%d-%m-%Y")
@@ -157,19 +196,23 @@ def main():
         time.sleep(0.5)
     
     if not all_rows:
-        print("No data collected")
-        sys.exit(1)
+        print("No new data to append")
+        sys.exit(0)
     
+    # Append to existing file or create new
     os.makedirs('data', exist_ok=True)
     
-    output_file = 'data/FO_Position.csv'
-    with open(output_file, 'w', newline='') as f:
+    file_exists = os.path.exists(output_file)
+    
+    with open(output_file, 'a' if file_exists else 'w', newline='') as f:
         writer = csv.writer(f)
-        writer.writerow(headers)
+        if not file_exists:
+            # Write header only if new file
+            writer.writerow(headers)
         writer.writerows(all_rows)
     
-    print(f"Data saved to {output_file}")
-    print(f"Total rows: {len(all_rows)}")
+    print(f"Appended {len(all_rows)} rows to {output_file}")
+    print(f"Total rows now: {len(all_rows) + (len(open(output_file).readlines()) - 1 if file_exists else 0)}")
 
 if __name__ == "__main__":
     main()
