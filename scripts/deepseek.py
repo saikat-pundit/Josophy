@@ -1,15 +1,11 @@
 import os
-from datetime import datetime
 from openai import OpenAI
-
-# Import our new data processing module
-from data_processing+prompt import prepare_prompt_and_context
+from data_processing_prompt import prepare_prompt_and_context, format_and_save_report
 
 def main():
     print("🚀 Starting parallel DeepSeek-v4-Pro yield report...")
     
     # 1. Fetch the pre-calculated prompt and file destinations
-    # Passing "deepseek" ensures the output file is named deepseek_report_YYYY-MM-DD.txt
     prompt, date_str, report_file = prepare_prompt_and_context(ai_name="deepseek")
     
     if not prompt:
@@ -46,19 +42,15 @@ def main():
             if chunk.choices[0].delta.content:
                 analysis_content += chunk.choices[0].delta.content
 
-        print("✅ Analysis generated successfully. Saving report...")
+        print("\n✅ Analysis generated successfully. Saving report...")
 
-        # 4. Format and Save the Report
-        report = f"============================================================\n"
-        report += f"📅 YIELD CURVE DAILY REPORT (DEEPSEEK PRO) - {date_str}\n"
-        report += f"============================================================\n\n"
-        report += f"📋 AI ANALYSIS:\n{analysis_content}\n"
-        report += f"============================================================\n"
-        report += f"✅ {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} | NVIDIA DeepSeek-V4-Pro\n"
-        
-        with open(report_file, 'w') as f:
-            f.write(report)
-        print(f"📄 DeepSeek report saved to: {report_file}")
+        # 4. ✅ CLEAN SAVING: Let the data_processing_prompt module handle the formatting!
+        format_and_save_report(
+            ai_display_name="NVIDIA DeepSeek-V4-Pro",
+            analysis_content=analysis_content,
+            date_str=date_str,
+            report_file=report_file
+        )
 
     except Exception as e:
         print(f"\n⚠️ NVIDIA DeepSeek API error: {e}")
