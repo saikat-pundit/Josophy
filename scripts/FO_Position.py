@@ -64,7 +64,7 @@ def fetch_and_process(date_str):
         return None
 
 def main():
-    start_date = "01072026"
+    start_date = "01122025"
     end_date = datetime.now().strftime("%d%m%Y")
     dates = generate_dates(start_date, end_date)
     
