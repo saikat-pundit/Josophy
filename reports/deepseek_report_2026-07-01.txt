@@ -1,0 +1,121 @@
+============================================================
+📅 YIELD CURVE DAILY REPORT (NVIDIA DEEPSEEK-V4-PRO) - 2026-07-01
+============================================================
+
+📋 AI ANALYSIS:
+1. MACROECONOMIC, INFLATION EXPECTATIONS & LIQUIDITY TRENDS
+The US economy is posting a robust nominal GDP growth of +4.53% YoY, but with CPI running at +3.90%, real growth is barely positive—roughly +0.6%. The two-year CAGR for GDP (+4.56%) and CPI (+3.29%) paints a similar picture: the expansion is largely a price-level story. Federal debt is expanding at +7.88% YoY (2Y CAGR +5.90%), outpacing GDP by a wide margin, a fiscal dynamic that will keep upward pressure on long-end yields and term premium.
+
+The inflation picture is where the data gets provocative. Headline CPI (+3.90% YoY) is running hot relative to the entire forward expectations curve: 1Y expected inflation sits at 3.02%, 2Y at 2.75%, out to 10Y at 2.49%. That spread—actual minus expected—is persistently positive, meaning consumers and markets have been systematically underpricing realized inflation. Yet expectations themselves are rising: 1Y expectations are up +23 bps YoY and +46 bps total over two years (+23 bps annualized). The term structure slopes downward, signalling belief in eventual moderation, but the anchor has shifted higher—10Y expectations at 2.49% are well above the pre-2020 norm. This expectations creep is a key driver of long-end yield stickiness.
+
+Producer prices scream pipeline pressure: PPI is up +12.29% YoY and a +6.91% two-year CAGR, far outstripping CPI. That gap implies either severe margin compression ahead or a coming pass-through to consumer prices. Combined with a tight labor market (unemployment 4.2%, wages +3.52% YoY), the risk of a second-round inflation wave is real.
+
+Liquidity conditions are mixed. M2 money supply is growing at +5.07% YoY (2Y CAGR +4.60%), roughly tracking nominal GDP—not excessively loose. The Fed’s balance sheet has been shrinking at a -3.56% two-year CAGR, but recent MoM (+0.31%) and QoQ (+0.75%) moves suggest quantitative tightening has paused or reversed slightly. Overall, liquidity is neutral-to-slightly-supportive, not the gusher of 2020-21.
+
+The US Dollar Index (DXY) at 120.08 is essentially flat YoY (-0.02%) but has declined at a -1.35% two-year CAGR. This gentle weakening trend supports dollar-denominated commodities and gold, though recent stability suggests the decline is maturing.
+
+2. YIELD OUTLOOK (Short/Medium/Long)
+The yield curve has normalized from its mid-2024 inversion. Today’s key spreads: 10Y-2Y at +31 bps, 10Y-3M at +63 bps, 30Y-2Y at +80 bps. No recession signal is flashing from the curve; the 10Y-3M spread—the most reliable inversion warning—is comfortably positive.
+
+Short-end dynamics are hawkish. The 3-month yield (3.85%) sits 22 bps above Fed Funds (3.63%), and its MoM (+7 bps) and QoQ (+15 bps) momentum points upward. The 2Y yield (4.17%) has surged +36 bps QoQ and +39 bps YoY, reflecting market pricing for either rate hikes or a sustained higher-for-longer stance. The 2Y-3M spread at +32 bps is consistent with a tightening bias.
+
+The long end is drifting higher but more slowly. The 10Y yield (4.48%) is up only +1 bp MoM, +15 bps QoQ, and +22 bps YoY, with a two-year CAGR of zero—remarkably stable over the cycle. The 30Y yield (4.97%) has a +17 bps annualized two-year trend, and its MoM dip (-2 bps) suggests some resistance. The 30Y-5Y spread (implied from raw data near 4.24% for 5Y) is around 73 bps, a steep long-end curve that reflects term premium for fiscal/debt supply concerns and inflation uncertainty.
+
+Real yields are elevated: 10Y real (10Y minus 10Y expected inflation) is roughly 1.99%. That is attractive for bonds but a headwind for equities and gold. The entire real curve is positive, a stark contrast to the negative real yields of 2020-21.
+
+Forward view: If actual CPI continues to outrun expectations, the short end will keep climbing, and the 2Y could reprice toward 4.50%+. The long end is caught between rising inflation expectations and the gravitational pull of slowing real growth; we expect a gradual steepening led by the short end.
+
+3. EQUITIES
+Current scenarios and forward forecast: Equity markets face a classic late-cycle tension. Nominal GDP growth supports top-line revenues, but the PPI-CPI gap warns of margin compression. With 10Y yields at 4.48% and real yields near 2%, the equity risk premium is thin—unless earnings growth accelerates sharply. The steepening curve favors financials, while elevated inflation expectations and commodity strength benefit energy and materials. However, rising short-end yields pressure long-duration growth stocks (tech, biotech) whose valuations rely on distant cash flows discounted at lower rates. Liquidity is not abundant enough to fuel multiple expansion.
+
+The inflation expectations nexus is critical here: if 1Y expectations keep climbing toward actual CPI, the discount rate applied to equities rises, compressing P/E ratios. Conversely, if expectations stabilize or fall, equities could get a relief rally.
+
+Prefer:
+- Value and cyclical sectors: energy, materials, industrials—they benefit from nominal growth and have pricing power in an inflationary environment.
+- Financials, especially banks: steepening yield curve improves net interest margins.
+- Short-duration equities: companies with high near-term cash flows and low debt.
+
+Avoid:
+- Long-duration growth/tech: high multiples are vulnerable to rising real yields.
+- Rate-sensitive sectors: utilities, real estate (REITs) suffer when 10Y yields rise.
+- Highly leveraged companies: refinancing risk as short rates climb.
+
+4. BONDS
+Current scenarios and forward forecast: The bond market offers the highest nominal yields in nearly two decades, but the question is whether they compensate for inflation and future rate moves. Short-to-intermediate maturities (2Y-5Y) present a compelling carry: 2Y at 4.17% provides a 54 bps cushion over Fed Funds, and if the Fed does not hike as much as priced, that cushion turns into capital gain. The 10Y real yield near 2% is attractive for long-term investors who believe inflation expectations are anchored. However, the risk is that inflation expectations keep rising, pushing nominal yields higher and inflicting capital losses on long-duration bonds. TIPS are a natural hedge: they lock in real yields while protecting against an inflation surprise.
+
+The yield spread structure (positive 10Y-2Y, steep 30Y-2Y) suggests no imminent recession, so credit spreads may remain contained, but the PPI surge could stress corporate margins and widen spreads for low-quality issuers.
+
+Prefer:
+- Short-to-intermediate nominal Treasuries (2Y-5Y): attractive carry with lower duration risk.
+- TIPS: lock in positive real yields and hedge against inflation expectations catching up to spot CPI.
+- High-quality corporate credit (A/AA): pick up spread without excessive default risk.
+
+Avoid:
+- Long-duration nominal bonds (20Y+): vulnerable to a further rise in inflation expectations and term premium.
+- Low-quality/high-yield credit: margin compression from PPI could spike default rates.
+- Unhedged foreign bonds: dollar stabilization reduces the case for currency-diversified fixed income.
+
+5. GOLD & PRECIOUS METALS
+Current scenarios and forward forecast: Gold typically thrives when real yields fall, the dollar weakens, or inflation uncertainty rises. Today, the 10Y real yield at ~2% is a stiff headwind—the opportunity cost of holding gold is high. DXY has weakened at a -1.35% two-year CAGR, which provides a mild tailwind, but the recent flatlining suggests the dollar decline is pausing. However, the persistent gap between actual CPI and inflation expectations creates an inflation-hedge bid: if consumers and markets start losing faith in the “transitory” narrative, gold could spike as a store of value. Central bank buying (not in our data) remains a wildcard.
+
+The spread between 1Y expected inflation (3.02%) and 10Y expected (2.49%) shows a downward-sloping expectations curve; if that curve flattens or inverts because near-term expectations surge, gold would benefit.
+
+Prefer:
+- Gold as a portfolio tail-risk hedge (5-10% allocation) against a stagflation bear case.
+- Gold miners: leveraged play on gold price with equity-like returns.
+
+Avoid:
+- Making gold a core holding: high real yields cap upside in the base case.
+- Silver/platinum if industrial demand slows; they are more cyclical.
+
+6. COMMODITIES
+Current scenarios and forward forecast: The PPI surge (+12.29% YoY, +6.91% 2Y CAGR) screams commodity strength upstream. A gently weakening dollar (DXY -1.35% 2Y CAGR) adds fuel, as most commodities are dollar-denominated. Global nominal GDP growth supports demand, but real growth is sluggish, so the commodity rally is more supply-driven and inflation-hedge-driven than demand-pull. Energy and industrial metals are likely leading. Agricultural commodities may also be elevated due to input cost pass-through.
+
+The inflation expectations nexus: rising near-term expectations (1Y +23 bps YoY) encourage hoarding of physical commodities as an inflation hedge, creating a self-reinforcing loop. If expectations stabilize, the speculative bid could fade.
+
+Prefer:
+- Energy (oil & gas): tight supply, geopolitical risk premium, and inflation hedging.
+- Industrial metals (copper, aluminum): infrastructure and electrification demand, plus supply constraints.
+- Broad commodity index exposure for diversification.
+
+Avoid:
+- Overweighting commodities if real yields rise further, as the carry cost increases.
+- Agricultural commodities subject to demand destruction if consumer spending weakens.
+
+7. CASH & FX
+Cash: The 3-month yield at 3.85% offers a real return of roughly +0.83% against 1Y expected inflation (3.02%), though slightly negative (-0.05%) against trailing CPI. In a rising short-end environment, cash is a competitive asset class—it provides liquidity and earns its keep while waiting for clearer opportunities. With the Fed Funds at 3.63% and the 2Y at 4.17%, cash equivalents (T-bills, money market funds) are attractive parking spots.
+
+FX: The DXY at 120.08 has been in a gentle two-year decline (-1.35% CAGR) but is flat YoY, suggesting the downtrend is losing momentum. If US short rates keep rising relative to other major economies, the dollar could strengthen, reversing the trend. Inflation expectations matter: if US inflation stays elevated, it erodes the dollar’s purchasing power over time, but high nominal yields can offset that by attracting capital flows. We see a range-bound to slightly stronger dollar in the near term, with a weakening bias over the medium term if inflation expectations keep rising.
+
+Prefer:
+- US dollar cash and short-term T-bills: attractive yield, safety, and liquidity.
+- Selective long dollar vs. currencies with negative real yields (e.g., yen, euro if ECB lags).
+- Short-term FX hedges for international exposures.
+
+Avoid:
+- Unhedged long positions in emerging market currencies: vulnerable if dollar strengthens or risk appetite sours.
+- Overweighting foreign cash accounts with lower yields and currency risk.
+
+8. PORTFOLIO MIX, SCENARIOS & ACTIONABLE STRATEGY
+Base Case (55% probability): Sticky but gradually moderating inflation, Fed on hold through mid-2026, curve slowly steepening. Real GDP ~1%, nominal GDP ~4%. Equities grind higher led by value/cyclicals; bonds range-bound with short-end carry attractive; gold sideways; dollar stable.
+- Portfolio: Overweight short-to-intermediate bonds, value equities, and commodities; underweight long-duration bonds and growth stocks.
+
+Bull Case (20% probability): Inflation falls faster than expectations, perhaps due to PPI pass-through fading and demand softening. Fed cuts once or twice, 10Y yield drops to 4.0%, curve bull-steepens. Equities rally broadly, especially growth; bonds rally; gold rises as real yields fall; dollar weakens.
+- Portfolio: Add long-duration bonds and growth equities; reduce cash.
+
+Bear Case (25% probability): PPI surge passes through to CPI, inflation expectations spike (1Y toward 4%), forcing Fed to hike. 2Y yield surges above 4.5%, curve inverts again (10Y-2Y negative). Equities sell off sharply, credit spreads widen, long bonds get crushed, gold spikes, dollar initially strengthens then falls.
+- Portfolio: Maximize cash, TIPS, gold, and defensive value; avoid almost all duration and growth.
+
+Actionable Strategy:
+- Risky investor: Tilt heavily into value equities (energy, materials, financials), commodities, and a tactical short-duration bond position. Keep a 10% gold hedge. Avoid long-duration bonds and growth/tech.
+- Conservative investor: Prioritize capital preservation with T-bills, 2Y Treasuries, TIPS, and a 15% gold allocation. Minimal equity exposure (20%) focused on dividend-paying staples and utilities with pricing power.
+- Balanced investor: 40% equities (value/cyclical tilt), 30% bonds (short-to-intermediate, half TIPS), 15% commodities, 10% gold, 5% cash. Rebalance if inflation expectations breach 3.5% on the 1Y.
+
+9. THE HUMAN ANGLE (Wages, Real Earnings, & Consumer Expectations)
+Average hourly earnings are growing at +3.52% YoY, a solid pace, but trailing CPI (+3.90%), meaning real wages are slightly negative on a year-over-year basis. However, the two-year CAGR tells a more encouraging story: wages +3.69% vs. CPI +3.29%, so over the cycle, workers have eked out a small real gain. The latest month (MoM wage +0.35%, CPI flat) suggests real earnings are improving at the margin.
+
+The spread between wage growth and 1Y inflation expectations (3.02%) is positive—workers’ pay is outpacing what they expect inflation to be, which could support consumer spending. But if actual CPI continues to surprise to the upside, that optimism erodes. The low unemployment rate (4.2%, near cycle lows) gives labor bargaining power, and we see it in the wage numbers. The risk of a wage-price spiral is contained but not absent: if 1Y expectations catch up to actual CPI and workers demand even higher raises, it could embed inflation.
+
+Housing is the starkest pain point. With the 30Y yield at 4.97%, mortgage rates are likely around 7%, crushing affordability. Housing supply has ballooned to 10.3 months—a +14.44% YoY and +12.08% two-year CAGR increase—indicating a deep buyer’s strike. This locks out first-time buyers and strains household budgets, potentially shifting spending patterns toward essentials and away from discretionary items. Consumers are bracing for persistently high prices, but they are not yet panicking; the downward-sloping inflation expectations curve suggests they still believe relief is coming. If that belief cracks, the macro consequences will be swift.
+============================================================
+✅ 2026-07-05 06:29:34 | NVIDIA DeepSeek-V4-Pro
