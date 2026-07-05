@@ -18,9 +18,13 @@ def fetch_and_process(date_str):
     url = f"https://nsearchives.nseindia.com/content/nsccl/fao_participant_vol_{date_str}.csv"
     try:
         response = requests.get(url)
+        if response.status_code == 404:
+            print(f"{date_str}: no data (holiday/weekend)")
+            return None
         response.raise_for_status()
         lines = response.text.strip().split('\n')
         if len(lines) < 3:
+            print(f"{date_str}: no data (incomplete file)")
             return None
         # Skip first row (header with description)
         header_line = lines[1].strip()
@@ -42,9 +46,10 @@ def fetch_and_process(date_str):
             new_row = [date_str] + values
             rows.append(new_row)
         
+        print(f"{date_str}: data fetched ✓")
         return new_headers, rows
     except Exception as e:
-        print(f"Error fetching {date_str}: {e}")
+        print(f"{date_str}: error - {e}")
         return None
 
 def main():
@@ -62,8 +67,6 @@ def main():
             if headers is None:
                 headers = h
             all_rows.extend(rows)
-        else:
-            print(f"No data for date: {date}")
     
     if not all_rows:
         print("No data collected")
