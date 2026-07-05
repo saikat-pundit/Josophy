@@ -1,3 +1,4 @@
+# .github/workflows/test_nifty.yml
 name: Test NIFTY Data Fetch
 
 on:
@@ -18,8 +19,8 @@ jobs:
       
       - name: Install dependencies
         run: |
-          pip install requests
+          pip install requests brotli
       
       - name: Run test script
         run: |
-          python scripts/test_nifty.py
+          python script/test_nifty.py
