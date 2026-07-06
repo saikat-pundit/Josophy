@@ -1,3 +1,4 @@
+# data_processing.py
 import os, sys, subprocess
 import pandas as pd
 import numpy as np
@@ -6,56 +7,51 @@ from datetime import datetime
 os.makedirs("reports", exist_ok=True)
 
 def run_fo_update():
-    """Run FO_Position.py to fetch new data and return True if data was appended"""
+    """Run FO_Position.py and return True if data was appended"""
     if not os.path.exists('scripts/FO_Position.py'):
         print("⚠️ FO_Position.py not found")
         return False
-    
-    # Hide output by capturing and suppressing it
-    result = subprocess.run(['python', 'scripts/FO_Position.py'], 
-                           capture_output=True, text=True)
-    
-    # Only show minimal output
+    result = subprocess.run(['python', 'scripts/FO_Position.py'], capture_output=True, text=True)
     if "Appended" in result.stdout:
         print("✅ New data appended to FO_Position.csv")
+        return True
     elif "No new data" in result.stdout:
         print("ℹ️ No new data available")
-    
-    return "Appended" in result.stdout
+    return False
 
 def process_market_data(file_path="data/FO_Position.csv"):
+    # Ensure data exists
     if not os.path.exists(file_path):
-        print(f"⚠️ Source data missing. Running FO_Position.py first...")
+        print("⚠️ Source data missing. Running FO_Position.py first...")
         run_fo_update()
         if not os.path.exists(file_path):
             raise FileNotFoundError(f"Source data file still not found at: {file_path}")
     
-    # Check if report already exists for latest date
+    # Read data and get latest date
     df = pd.read_csv(file_path)
     df['DATE'] = pd.to_datetime(df['DATE'].astype(str).str.zfill(8), format='%d%m%Y')
     latest_date = df['DATE'].max().strftime('%Y%m%d')
-    report_path = f"reports/FO Analysis_{latest_date}.txt"
+    ai_report_path = f"reports/ai_market_analysis_{latest_date}.txt"
     
-    if os.path.exists(report_path):
-        print(f"✅ Report already exists for date {latest_date}. Skipping analysis.")
+    # Check if AI report already exists
+    if os.path.exists(ai_report_path):
+        print(f"✅ AI report already exists for date {latest_date}. Skipping.")
         return
     
-    # Run FO update if needed
-    last_recorded = df['DATE'].max().strftime('%Y-%m-%d')
+    # Update data if needed
     today = datetime.now().strftime('%Y-%m-%d')
-    if last_recorded < today:
+    if df['DATE'].max().strftime('%Y-%m-%d') < today:
         print(f"🔄 Updating data up to {today}...")
         run_fo_update()
         df = pd.read_csv(file_path)
         df['DATE'] = pd.to_datetime(df['DATE'].astype(str).str.zfill(8), format='%d%m%Y')
         latest_date = df['DATE'].max().strftime('%Y%m%d')
-        report_path = f"reports/FO Analysis_{latest_date}.txt"
-        
-        if os.path.exists(report_path):
-            print(f"✅ Report already exists for updated date {latest_date}. Skipping.")
+        ai_report_path = f"reports/ai_market_analysis_{latest_date}.txt"
+        if os.path.exists(ai_report_path):
+            print(f"✅ AI report already exists for updated date {latest_date}. Skipping.")
             return
     
-    # ---- REST OF YOUR EXISTING ANALYSIS CODE REMAINS UNCHANGED ----
+    # ---- DATA PROCESSING (unchanged) ----
     df.columns = df.columns.str.strip()
     df = df.sort_values(by=['DATE', 'Client Type']).reset_index(drop=True)
     
@@ -151,12 +147,21 @@ Based on the data matrix above, provide a comprehensive market commentary detail
 2. Macro Risk Confluence: Synthesize the current behavior of the USDINR and VIX relative to structural FII Cash and Futures positions.
 3. Market Outlook: Provide an explicit weekly outlook (via options alignment) and a monthly outlook (via futures build-up).
 """
-
-    with open(report_path, "w", encoding="utf-8") as f:
+    
+    # Save the prompt temporarily
+    temp_prompt_path = f"reports/temp_prompt_{latest_date}.txt"
+    with open(temp_prompt_path, "w", encoding="utf-8") as f:
         f.write(prompt)
     
-    print(f"✅ Analysis payload saved to: {report_path}")
-    print(f"📊 Total rows processed: {len(df)} | Latest date: {latest_date_str}")
+    # Run feed_to_ai.py with the prompt
+    print(f"🔄 Sending to AI for analysis...")
+    subprocess.run(['python', 'feed_to_ai.py', temp_prompt_path, latest_date], capture_output=True)
+    
+    # Clean up temp file
+    if os.path.exists(temp_prompt_path):
+        os.remove(temp_prompt_path)
+    
+    print(f"✅ AI analysis saved to: {ai_report_path}")
 
 if __name__ == "__main__":
     process_market_data()
