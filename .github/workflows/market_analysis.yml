@@ -1,9 +1,12 @@
 name: Indian Stock Market AI Analysis
 
 on:
+  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-  schedule:
-    - cron: '30 17 * * *'  # 11:00 PM IST (5:30 PM UTC)
+  
+  # Optional: Schedule it to run automatically (e.g., Monday-Friday at 14:00 UTC)
+  # schedule:
+  #   - cron: '0 14 * * 1-5'
 
 jobs:
   analyze_market_data:
@@ -24,10 +27,17 @@ jobs:
           python -m pip install --upgrade pip
           pip install pandas numpy openai requests
 
-      - name: Run FO Position Update
-        run: python scripts/FO_Position.py
-
-      - name: Run Data Processing & AI Analysis
+      - name: Run Data Processing Script
+        run: python scripts/data_processing.py
+        
+      - name: Run AI Ingestion Script
         env:
           NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
-        run: python scripts/data_processing.py
+        run: python scripts/feed_to_ai.py
+
+      - name: Upload Analysis Reports as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: market-analysis-reports
+          path: reports/
+          retention-days: 7 # Keeps the reports for 7 days in the GitHub UI
