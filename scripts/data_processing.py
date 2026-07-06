@@ -1,128 +1,108 @@
 import os
-import sys
-import subprocess
 import pandas as pd
 import numpy as np
-from datetime import datetime
 
+# Ensure execution directories exist
 os.makedirs("reports", exist_ok=True)
 
-def run_fo_update():
-    """Run FO_Position.py and return True if data was appended"""
-    if not os.path.exists('scripts/FO_Position.py'):
-        print("⚠️ FO_Position.py not found")
-        return False
-    result = subprocess.run(['python', 'scripts/FO_Position.py'],
-                            capture_output=True, text=True)
-    if "Appended" in result.stdout:
-        print("✅ New data appended to FO_Position.csv")
-        return True
-    elif "No new data" in result.stdout:
-        print("ℹ️ No new data available")
-    return False
-
 def process_market_data(file_path="data/FO_Position.csv"):
-    # --- 1. Ensure data exists ---
     if not os.path.exists(file_path):
-        print("⚠️ Source data missing. Running FO_Position.py first...")
-        run_fo_update()
-        if not os.path.exists(file_path):
-            raise FileNotFoundError(f"Source data file still not found at: {file_path}")
-
-    # --- 2. Read data and get latest date (DDMMYYYY) ---
-    df = pd.read_csv(file_path)
-    df['DATE'] = pd.to_datetime(df['DATE'].astype(str).str.zfill(8), format='%d%m%Y')
-    latest_date = df['DATE'].max().strftime('%d%m%Y')          # DDMMYYYY
-    ai_report_path = f"reports/ai_market_analysis_{latest_date}.txt"
-
-    # --- 3. CHECK IF AI REPORT ALREADY EXISTS ---
-    if os.path.exists(ai_report_path):
-        print(f"✅ AI report already exists for date {latest_date}. Skipping.")
-        return  # <--- STOP HERE
-
-    # --- 4. Update data if we are behind today ---
-    today = datetime.now().strftime('%d%m%Y')
-    if df['DATE'].max().strftime('%d%m%Y') < today:
-        print(f"🔄 Updating data up to {today}...")
-        run_fo_update()
-        df = pd.read_csv(file_path)
-        df['DATE'] = pd.to_datetime(df['DATE'].astype(str).str.zfill(8), format='%d%m%Y')
-        latest_date = df['DATE'].max().strftime('%d%m%Y')
-        ai_report_path = f"reports/ai_market_analysis_{latest_date}.txt"
+        raise FileNotFoundError(f"Source data file not found at: {file_path}")
         
-        # Check again after update
-        if os.path.exists(ai_report_path):
-            print(f"✅ AI report already exists for updated date {latest_date}. Skipping.")
-            return
-
-    # --- 5. Data processing (calculations) ---
+    # Load and clean dataset
+    df = pd.read_csv(file_path)
+    
+    # Standardize Column Names (strip whitespace)
     df.columns = df.columns.str.strip()
+    
+    # Parse Dates (Format: DDMMYYYY)
+    df['DATE'] = pd.to_datetime(df['DATE'].astype(str).str.zfill(8), format='%d%m%Y')
     df = df.sort_values(by=['DATE', 'Client Type']).reset_index(drop=True)
-
+    
+    # Fill NaN values in Cash Market columns with 0
     df['CASH MARKET BUY'] = pd.to_numeric(df['CASH MARKET BUY'], errors='coerce').fillna(0)
     df['CASH MARKET SELL'] = pd.to_numeric(df['CASH MARKET SELL'], errors='coerce').fillna(0)
-
+    
+    # --- 1. Core Mathematical Metrics (As per specified logic) ---
     df['Net_Index_Future'] = df['Future Index Long'] - df['Future Index Short']
     df['Net_Index_Call'] = df['Option Index Call Long'] - df['Option Index Call Short']
     df['Net_Index_Put'] = df['Option Index Put Long'] - df['Option Index Put Short']
     df['Net_Index_Option'] = df['Net_Index_Call'] - df['Net_Index_Put']
+    
     df['Net_Stock_Call'] = df['Option Stock Call Long'] - df['Option Stock Call Short']
     df['Net_Stock_Put'] = df['Option Stock Put Long'] - df['Option Stock Put Short']
     df['Net_Stock_Option'] = df['Net_Stock_Call'] - df['Net_Stock_Put']
     df['Net_Stock_Future'] = df['Future Stock Long'] - df['Future Stock Short']
+    
     df['Net_Cash_Market'] = df['CASH MARKET BUY'] - df['CASH MARKET SELL']
-
-    metrics = [
-        'Net_Index_Future', 'Net_Index_Option', 'Net_Stock_Future',
-        'Net_Stock_Option', 'Net_Cash_Market',
-        'Future Index Long', 'Future Index Short'
+    
+    # --- 2. 7-Day Moving Averages & Momentum (Calculated per Participant Category) ---
+    metrics_to_average = [
+        'Net_Index_Future', 'Net_Index_Option', 'Net_Stock_Future', 
+        'Net_Stock_Option', 'Net_Cash_Market', 'Future Index Long', 'Future Index Short'
     ]
-    for m in metrics:
-        df[f'{m}_7DMA'] = df.groupby('Client Type')[m].transform(
-            lambda x: x.rolling(7, min_periods=1).mean()
+    
+    for metric in metrics_to_average:
+        # 7DMA of the final net position
+        df[f'{metric}_7DMA'] = df.groupby('Client Type')[metric].transform(
+            lambda x: x.rolling(window=7, min_periods=1).mean()
         )
-        df[f'{m}_Change'] = df.groupby('Client Type')[m].diff().fillna(0)
-        df[f'{m}_Change_7DMA'] = df.groupby('Client Type')[f'{m}_Change'].transform(
-            lambda x: x.rolling(7, min_periods=1).mean()
+        
+        # Everyday position change (Daily Delta)
+        df[f'{metric}_Change'] = df.groupby('Client Type')[metric].diff().fillna(0)
+        
+        # 7DMA of the day-over-day changes
+        df[f'{metric}_Change_7DMA'] = df.groupby('Client Type')[f'{metric}_Change'].transform(
+            lambda x: x.rolling(window=7, min_periods=1).mean()
         )
 
-    price_df = df[['DATE', 'NIFTY50', 'BANK NIFTY']].drop_duplicates().sort_values('DATE')
+    # --- 3. Forward Price Performance Engine (Determining Winners & Losers) ---
+    # Extract historical underlying index price tracking per day
+    price_df = df[['DATE', 'NIFTY50', 'BANK NIFTY']].drop_duplicates().sort_values('DATE').reset_index(drop=True)
+    # Calculate 3-day and 5-day forward market returns to evaluate positional success
     price_df['Nifty_5D_Forward_Return'] = price_df['NIFTY50'].shift(-5) - price_df['NIFTY50']
     price_df['BankNifty_5D_Forward_Return'] = price_df['BANK NIFTY'].shift(-5) - price_df['BANK NIFTY']
-    df = pd.merge(df, price_df[['DATE', 'Nifty_5D_Forward_Return', 'BankNifty_5D_Forward_Return']],
-                  on='DATE', how='left')
-
+    
+    df = pd.merge(df, price_df[['DATE', 'Nifty_5D_Forward_Return', 'BankNifty_5D_Forward_Return']], on='DATE', how='left')
+    
+    # Calculate Directional Accuracy Score (%)
+    # Success condition: Position bias matches forward actual index direction
     df['Index_Future_Win'] = np.where(
-        ((df['Net_Index_Future'] > 0) & (df['Nifty_5D_Forward_Return'] > 0)) |
-        ((df['Net_Index_Future'] < 0) & (df['Nifty_5D_Forward_Return'] < 0)),
-        1, 0
+        ((df['Net_Index_Future'] > 0) & (df['Nifty_5D_Forward_Return'] > 0)) | 
+        ((df['Net_Index_Future'] < 0) & (df['Nifty_5D_Forward_Return'] < 0)), 1, 0
     )
     df['Index_Option_Win'] = np.where(
-        ((df['Net_Index_Option'] > 0) & (df['Nifty_5D_Forward_Return'] > 0)) |
-        ((df['Net_Index_Option'] < 0) & (df['Nifty_5D_Forward_Return'] < 0)),
-        1, 0
+        ((df['Net_Index_Option'] > 0) & (df['Nifty_5D_Forward_Return'] > 0)) | 
+        ((df['Net_Index_Option'] < 0) & (df['Nifty_5D_Forward_Return'] < 0)), 1, 0
     )
 
-    # --- 6. Performance summary ---
-    summary = {}
-    for client in df['Client Type'].unique():
-        cd = df[df['Client Type'] == client].dropna(subset=['Nifty_5D_Forward_Return'])
-        if len(cd) > 0:
-            latest = df[df['Client Type'] == client].iloc[-1]
-            summary[client] = {
-                'future_win_rate_5d': round((cd['Index_Future_Win'].sum() / len(cd)) * 100, 2),
-                'option_win_rate_5d': round((cd['Index_Option_Win'].sum() / len(cd)) * 100, 2),
-                'current_index_future_bias': 'BULLISH' if latest['Net_Index_Future'] > 0 else 'BEARISH',
-                'current_index_option_bias': 'BULLISH' if latest['Net_Index_Option'] > 0 else 'BEARISH',
-                'current_cash_net': round(latest['Net_Cash_Market'], 2)
+    # Aggregate performance statistics across the 6+ months dataset
+    performance_summary = {}
+    unique_clients = df['Client Type'].unique()
+    
+    for client in unique_clients:
+        client_data = df[df['Client Type'] == client].dropna(subset=['Nifty_5D_Forward_Return'])
+        if len(client_data) > 0:
+            future_win_rate = (client_data['Index_Future_Win'].sum() / len(client_data)) * 100
+            option_win_rate = (client_data['Index_Option_Win'].sum() / len(client_data)) * 100
+            
+            # Find current positional trends
+            latest_row = df[df['Client Type'] == client].iloc[-1]
+            
+            performance_summary[client] = {
+                "future_win_rate_5d": round(future_win_rate, 2),
+                "option_win_rate_5d": round(option_win_rate, 2),
+                "current_index_future_bias": "BULLISH" if latest_row['Net_Index_Future'] > 0 else "BEARISH",
+                "current_index_option_bias": "BULLISH" if latest_row['Net_Index_Option'] > 0 else "BEARISH",
+                "current_cash_net": round(latest_row['Net_Cash_Market'], 2)
             }
 
-    latest_date_str = df['DATE'].max().strftime('%Y-%m-%d')
+    # --- 4. Structure the Deep AI Prompt Injection Layout ---
+    latest_date = df['DATE'].max().strftime('%Y-%m-%d')
     latest_snapshot = df[df['DATE'] == df['DATE'].max()]
-
-    # --- 7. Build AI prompt ---
-    prompt = f"""SYSTEM INSTRUCTION & DATA PAYLOAD: INDIAN STOCK MARKET DERIVATIVES ANALYSIS
-Target Context Date: {latest_date_str}
+    
+    prompt_content = f"""SYSTEM INSTRUCTION & DATA PAYLOAD: INDIAN STOCK MARKET DERIVATIVES ANALYSIS
+Target Context Date: {latest_date}
 Data Horizon Analyzed: >6 Months (From Dec 2025 onwards)
 
 ======================================================================
@@ -131,8 +111,8 @@ PART 1: PERFORMANCE TRACKING MATRIX (HISTORICAL WIN/LOSS ALIGNMENT)
 Below is the statistical historical 5-Day forward accuracy mapping for each market participant type across the analyzed dataset:
 
 """
-    for client, stats in summary.items():
-        prompt += f"""Participant Profile: {client}
+    for client, stats in performance_summary.items():
+        prompt_content += f"""Participant Profile: {client}
   - Index Futures Historical Win Rate (5-Day Outlook): {stats['future_win_rate_5d']}%
   - Index Options Historical Win Rate (Weekly Outlook): {stats['option_win_rate_5d']}%
   - Current Active Futures Stance: {stats['current_index_future_bias']}
@@ -140,15 +120,16 @@ Below is the statistical historical 5-Day forward accuracy mapping for each mark
   - Latest Day Net Cash Activity: INR {stats['current_cash_net']} Crs
 ----------------------------------------------------------------------
 """
-    prompt += """
+
+    prompt_content += """
 ======================================================================
 PART 2: LATEST DAILY POSITION SNAPSHOT vs 7-DAY MOVING AVERAGES (7DMA)
 ======================================================================
 Detailed transactional snapshot for the most recent trading session, containing direct divergence and momentum metrics against 7DMAs:
 
 """
-    for _, row in latest_snapshot.iterrows():
-        prompt += f"""[Client Type: {row['Client Type']}]
+    for idx, row in latest_snapshot.iterrows():
+        prompt_content += f"""[Client Type: {row['Client Type']}]
 - Market Context: NIFTY50: {row['NIFTY50']} | BANK NIFTY: {row['BANK NIFTY']} | India VIX: {row['VIX']} | USDINR: {row['USDINR']}
 - Derivatives Breakdown:
   * Net Index Futures: {row['Net_Index_Future']} (7DMA: {round(row['Net_Index_Future_7DMA'], 2)}) | Daily Change: {row['Net_Index_Future_Change']} (7DMA Change: {round(row['Net_Index_Future_Change_7DMA'], 2)})
@@ -161,7 +142,8 @@ Detailed transactional snapshot for the most recent trading session, containing 
   * Future Index Short Position is {'ABOVE' if row['Future Index Short'] > row['Future Index Short_7DMA'] else 'BELOW'} its 7DMA.
 ----------------------------------------------------------------------
 """
-    prompt += """
+
+    prompt_content += """
 ======================================================================
 PART 3: ANALYTICAL EXPECTATIONS
 ======================================================================
@@ -171,19 +153,12 @@ Based on the data matrix above, provide a comprehensive market commentary detail
 3. Market Outlook: Provide an explicit weekly outlook (via options alignment) and a monthly outlook (via futures build-up).
 """
 
-    # --- 8. Save temp prompt and call feed_to_ai.py ---
-    temp_prompt_path = f"reports/temp_prompt_{latest_date}.txt"
-    with open(temp_prompt_path, "w", encoding="utf-8") as f:
-        f.write(prompt)
-
-    print(f"🔄 Sending to AI for analysis...")
-    subprocess.run(['python', 'feed_to_ai.py', temp_prompt_path, latest_date],
-                   capture_output=True)
-
-    if os.path.exists(temp_prompt_path):
-        os.remove(temp_prompt_path)
-
-    print(f"✅ AI analysis saved to: {ai_report_path}")
+    # Export report prompt payload to text file
+    output_path = "reports/processed_data_prompt.txt"
+    with open(output_path, "w") as f:
+        f.write(prompt_content)
+        
+    print(f"Success: Processed dataset and generated AI prompt payload at: {output_path}")
 
 if __name__ == "__main__":
     process_market_data()
