@@ -1,0 +1,87 @@
+============================================================
+📅 YIELD CURVE DAILY REPORT (gpt-oss-120b) - 2026-07-07
+============================================================
+
+📋 AI ANALYSIS:
+**1. MACROECONOMIC, INFLATION EXPECTATIONS & LIQUIDITY TRENDS**  
+*Growth*: Real GDP is expanding at a 4.5 % YoY pace (2‑yr CAGR ≈ 4.6 %). Core‑PPI is rising faster than CPI (6.9 % vs 3.3 % CAGR), indicating sticky input‑price pressure. Federal debt is climbing 7.9 % YoY (5.9 % CAGR), adding fiscal head‑room but also future financing needs.  
+
+*Inflation expectations*: 1‑yr forward inflation is 3.02 % (up +23 bp YoY, +23 bp annualised). The term‑structure of expectations is flat‑to‑slightly upward (2‑yr 2.75 % → 10‑yr 2.49 %). Expectations are rising modestly across every horizon, outpacing the recent 2‑yr CAGR of +12 bp (2‑yr inflation expectations) but still below the current CPI YoY of 3.9 %.  
+
+*Liquidity*: M2 is up 5.07 % YoY (CAGR ≈ 4.6 %). The Fed’s balance‑sheet (“WALCL”) is contracting at a 3.5 % CAGR, reflecting the gradual runoff of QE. Net “cash” in the system remains ample relative to the modest YoY money‑growth, supporting short‑run risk appetite.
+
+**2. YIELD OUTLOOK (SHORT / MEDIUM / LONG)**  
+| Segment | Current | 2‑yr CAGR (bps) | Recent MoM / QoQ | Real Yield (nom‑exp) | Outlook |
+|--------|---------|------------------|------------------|----------------------|---------|
+| 3‑M   | 3.86 % | –80 bp | +8 bp MoM, –56 bp YoY | 0.84 % (3.86‑3.02) | Slightly higher, but still falling YoY – short‑term rates likely to dip further as policy eases. |
+| 2‑Y   | 4.19 % | –20 bp | +2 bp MoM, +29 bp YoY | 1.44 % (4.19‑2.75) | Near‑term yields have peaked; a modest decline expected as the Fed trims the funds rate (‑85 bp 2‑yr). |
+| 10‑Y  | 4.55 % | +13 bp | 0 bp MoM, +15 bp YoY | 2.06 % (4.55‑2.49) | Yield curve steepening (10Y‑2Y ≈ 36 bp) and positive real yield keep 10‑yr attractive for duration‑seeking investors. |
+| 30‑Y  | 5.05 % | +29 bp | +4 bp MoM, +13 bp YoY | 2.56 % (5.05‑2.49) | Long‑end is steepening (30Y‑2Y ≈ 86 bp). With a declining Fed balance sheet, expectations of higher long‑term rates persist. |
+
+*Spread diagnostics* – 10Y‑3M remains +69 bp (no inversion), signaling recession risk is low for now. 30Y‑2Y (+86 bp) is a proxy for global liquidity; the widening suggests that long‑term funding is still generous despite the short‑run taper.
+
+**3. EQUITIES**  
+*Current*: Corporate earnings are tracking GDP (+4‑5 % YoY) while nominal yields sit at 4.5‑5 %, giving an earnings‑yield of roughly 4‑5 %. Inflation expectations (≈3 %) are well‑below CPI, so pricing power is still limited but pockets of “price‑setter” firms can out‑perform.  
+
+*Forward*: If CPI eases toward the 2‑yr expectation (≈2.8 %), earnings multiples could re‑rate upward; if inflation stubbornly stays above 4 %, profit margins compress and equity valuations could be pressured.  
+
+**Prefer** – High‑margin, inflation‑pass‑through sectors (industrial‑tech, specialty chemicals, consumer‑discretionary with brand power).  
+
+**Avoid** – Low‑margin, rate‑sensitive utilities and REITs that depend on cheap long‑term funding (30‑yr rate rising).
+
+**4. BONDS**  
+*Current*: The curve is steepening (10Y‑2Y ≈ 36 bp, 30Y‑2Y ≈ 86 bp). Real yields are positive across the board (2Y ≈ 1.4 %, 10Y ≈ 2.1 %).  
+
+*Forward*: Short‑end likely to fall further as the Fed trims the funds rate (‑85 bp 2‑yr CAGR). The long‑end may keep rising modestly (30Y +29 bp CAGR) if fiscal deficits force higher long‑duration borrowing.  
+
+**Prefer** – 2‑yr Treasuries (high real yield, price appreciation as rates fall) and inflation‑linked TIPS (real yield ~1‑1.5 %).  
+
+**Avoid** – Long‑duration 30‑yr nominal bonds for a risk‑averse slate; they will lose value if the steepening continues or if inflation expectations rise sharply.
+
+**5. GOLD & PRECIOUS METALS**  
+*Current*: Real yields are still positive (≈2 % on 10‑yr) but have slipped from the prior year’s 3 %+. Inflation expectations are climbing (+0.2 % YoY); the dollar is weakening (DXY YoY –0.02 %, 2‑yr CAGR ‑1.35 %).  
+
+*Forward*: If real yields trend lower (e.g., 10‑yr real yield < 1.5 %) and the dollar continues to soften, gold should post modest upside. A sudden spike in CPI > 4 % would boost safe‑haven demand.  
+
+**Prefer** – Physical gold or gold‑ETF for 6‑12 month hedge.  
+
+**Avoid** – High‑leverage precious‑metal mining equities until the price‑trend stabilises.
+
+**6. COMMODITIES**  
+*Current*: PPI YoY +12.3 % (2‑yr CAGR +6.9 %) shows strong upstream price pressure. Core inflation expectations are rising modestly, supporting commodity‑price expectations.  
+
+*Forward*: With real yields falling and the dollar weakening, industrial metals and energy are likely to trend higher, especially if supply chain bottlenecks persist.  
+
+**Prefer** – Broad commodity basket (e.g., Bloomberg Commodity Index) and focused exposure to copper and oil.  
+
+**Avoid** – Agricultural commodities that are more weather‑sensitive and lack macro tailwinds.
+
+**7. CASH & FX**  
+*Current*: The dollar is slightly softer (DXY –0.02 % YoY, –1.35 % CAGR). Short‑term rates have dropped (3‑M +8 bp MoM but down YoY).  
+
+*Forward*: Continued Fed easing and higher inflation expectations keep the dollar under pressure; however, any surprise in CPI data could trigger a short‑term rally.  
+
+**Prefer** – Holding cash in higher‑yielding short‑term Treasury bills (2‑yr) or money‑market funds that capture the falling rates.  
+
+**Avoid** – Long‑dated USD‑denominated bonds and USD‑heavy cash positions if the dollar trends lower.
+
+**8. PORTFOLIO MIX, SCENARIOS & ACTIONABLE STRATEGY**  
+
+| Scenario | Probability | Key Assumptions | Portfolio Tilt |
+|----------|------------|----------------|-----------------|
+| **Base** (55 %) | GDP +4.5 % YoY, CPI eases to 3.5 % by H2, Fed cuts 25 bp/quarter | Yield curve steepens, real yields stay 1‑2 % | **Balanced** – 40 % US equities (growth + defensive), 30 % mixed‑duration Treasuries, 10 % gold, 10 % commodities, 10 % cash/Fx. |
+| **Bull** (30 %) | GDP accelerates >5 %, CPI falls <3 % YoY, 2‑yr yields drop <3.5 % | Strong earnings, lower rates → equity rally, safe‑haven assets under‑perform | **Risk‑on** – 60 % equities (tilt to tech & pricing‑power), 15 % short‑duration bonds, 10 % commodities, 5 % gold, 10 % cash. |
+| **Bear** (15 %) | CPI spikes >4.5 % YoY, 10‑yr yields climb >5 %, recession risk rises (10Y‑3M inversion risk) | Real yields turn negative, equities compress, flight‑to‑quality | **Defensive** – 45 % short‑duration Treasuries, 25 % cash, 15 % defensive equities (utilities, health), 10 % gold, 5 % commodities. |
+
+*Implementation*: Use sector‑specific ETFs to achieve the equity tilts, ladder Treasury purchases (2‑yr, 10‑yr), and allocate a modest portion (≤ 5 % of total) to leveraged metal/minerals futures only in the Bull case.
+
+**9. THE HUMAN ANGLE (Wages, Real Earnings & Consumer Expectations)**  
+*Wage vs. Price*: Average hourly earnings grew 3.52 % YoY, while CPI rose 3.90 % YoY. Real wages therefore fell ≈ 0.4 % YoY. Expected inflation (1‑yr 3.02 %) is **lower** than current CPI, suggesting consumers anticipate price moderation. However, wage growth is still below actual inflation, meaning disposable income is being squeezed.  
+
+*Unemployment*: At 4.20 % (up 10 bp YoY), labor market slack is modestly increasing, limiting wage‑price spirals but also signaling a slight weakening in demand.  
+
+*Housing*: Mortgage rates (10‑yr ≈ 4.55 %) translate to ~4.8‑5 % mortgage yields. Housing inventory months are 10.3, up 14 % YoY, indicating more supply. Higher rates plus rising inventory pressurise home‑price growth, especially for price‑sensitive buyers.  
+
+*Consumer sentiment*: With inflation expectations rising (+0.2 % YoY) and real wages negative, households are likely to become more price‑sensitive, favoring discount retailers and “value” brands while being cautious on discretionary spending. This dynamic supports the sector tilt toward companies with pricing power and away from retail‑heavy, low‑margin businesses.  
+============================================================
+✅ 2026-07-09 01:10:12 | openai/gpt-oss-120b
