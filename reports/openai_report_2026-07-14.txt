@@ -1,0 +1,108 @@
+============================================================
+📅 YIELD CURVE DAILY REPORT (gpt-oss-120b) - 2026-07-14
+============================================================
+
+📋 AI ANALYSIS:
+**1. MACROECONOMIC, INFLATION EXPECTATIONS & LIQUIDITY TRENDS**  
+- **Growth:** Real GDP is expanding at a 2‑yr CAGR of **4.56 %** – the fastest pace since 2022. The labor market remains tight (unemployment = 4.30 %, +20 bp YoY) and payrolls are up **0.39 %** annually, supporting demand.  
+- **Inflation:** CPI YoY = 3.90 % (CAGR = 3.29 %). Forward inflation expectations are sliding sharply: 1‑yr exp‑inf = 2.39 % (‑63 bp MoM, ‑40 bp YoY, ‑17 bp over 2 yr), 2‑yr exp‑inf = 2.44 % (‑31 bp MoM, ‑12 bp YoY, ‑7 bp over 2 yr). The gap between actual CPI and 1‑yr expectations remains **+1.5 %**, indicating that consumers still see price pressures higher than the market’s forecast.  
+- **Liquidity:** M2 is growing YoY +5.07 % (CAGR +4.6 %). The Fed balance‑sheet is shrinking (‑3.44 % CAGR), signalling a gradual pull‑back of excess reserves. DXY is flat YoY (‑0.02 %) with a modest –1.35 % 2‑yr CAGR, so the dollar is losing a little ground while Treasury yields stay elevated.  
+
+**Take‑away:** The macro backdrop is a modest‑to‑strong growth environment, with inflation easing faster than the pace of price gains and modest liquidity contraction.
+
+---
+
+**2. YIELD OUTLOOK (Short/Medium/Long)**  
+- **Short end (3M‑2Y):** 3M = 3.84 % (‑58 bp YoY) vs 2Y = 4.18 % (‑28 bp YoY). The 30‑bp **3M‑2Y spread** is still **negative** (‑34 bp), a classic recession signal, but the spread has narrowed from ‑70 bp a year ago, implying the short curve is flattening **slowly**. MoM 3M up 6 bp, 2Y up 9 bp – short‑term yields are beginning to rebound.  
+- **Medium term (2Y‑10Y):** 10Y = 4.58 % (‑15 bp YoY) vs 2Y = 4.18 % → **10Y‑2Y = 40 bp** (steepening from ~20 bp a year ago). Forward inflation expectations at 2 yr (2.44 %) are below the 10Y nominal yield, giving a modest real yield cushion.  
+- **Long end (10Y‑30Y):** 30Y = 5.08 % (‑11 bp YoY) → **30Y‑10Y = 50 bp** (still steep, up 21 bp YoY). The **30Y‑2Y spread = 90 bp**, reflecting ample long‑run liquidity and the Fed’s balance‑sheet unwind.  
+
+**Outlook:** Short‑term yields will likely **stabilise** near 4 % as the Fed holds rates; the medium curve is set to **steepen modestly** if inflation expectations keep falling; the long curve remains **steep** and will support duration‑seeking bonds until the balance‑sheet shrinkage eases.
+
+---
+
+**3. EQUITIES**  
+- **Current scenario:** Strong earnings growth (wage growth +3.16 % YoY) and a still‑expanding economy support corporate profit. The falling short‑term yield curve reduces equity‑risk premiums, while a steeper medium curve keeps financing costs moderate.  
+- **Forward view:** If CPI continues to trend below 3 % and forward inflation stays under 2.5 %, equity earnings multiples should **compress modestly** (10‑12 % upside). A resurgence of inflation expectations would lift discount rates and cap upside.  
+
+| Preference | Rationale |
+|------------|-----------|
+| **Prefer:** Large‑cap quality, cyclical‑sensitive sectors (industrial, tech) that benefit from low short‑rate financing and expanding demand. | Steepening 2Y‑10Y and solid wage growth support capacity expansion. |
+| **Avoid:** High‑beta growth stocks with >30‑yr valuation exposure. | Long‑end yield strength (30Y‑10Y = 50 bp) pushes real yields higher, hurting over‑valued growth. |
+
+---
+
+**4. BONDS**  
+- **Current scenario:** 2‑yr yields have slipped **‑27 bp** over the past 2 yr, while the 10‑yr is up **+40 bp**. The shape is a **steepening** medium curve, implying price appreciation for 2‑yr notes relative to 10‑yr. Real yields (10Y‑exp‑inf ≈ 2.1 %) are still modest, giving room for inflation‑protected securities.  
+
+| Preference | Rationale |
+|------------|-----------|
+| **Prefer:** 2‑yr to 5‑yr Treasury and high‑quality corporate bonds (BBB+ and above). | Steepening spread offers price gain; inflation expectations are low, protecting real returns. |
+| **Avoid:** 30‑yr Treasuries and long‑dated high‑yield bonds. | Long‑end is expensive (30Y‑2Y = 90 bp) and sensitive to any rebound in inflation expectations. |
+
+---
+
+**5. GOLD & PRECIOUS METALS**  
+- **Current scenario:** Real yields remain **negative** (10Y nominal 4.58 % vs 1‑yr exp‑inf 2.39 % → real ≈ 2.2 %). However, the gap between CPI (3.9 %) and 1‑yr expectations (2.39 %) signals persistent price‑pressure concerns, which traditionally support gold.  
+
+| Preference | Rationale |
+|------------|-----------|
+| **Prefer:** Physical gold and inflation‑linked ETFs (e.g., TIPS). | Negative real yields + upside potential if CPI stays above 3 % while expectations stay low. |
+| **Avoid:** Precious‑metal mining equities with high operating leverage. | Those stocks are more exposed to rising real yields if the curve steepens further. |
+
+---
+
+**6. COMMODITIES**  
+- **Current scenario:** PPI YoY = 12.29 % (CAGR = 6.91 %) far above any inflation expectation. Commodity prices are being driven by input‑cost inflation rather than demand. Forward inflation expectations remain modest, suggesting a **temporary** commodity price rally.  
+
+| Preference | Rationale |
+|------------|-----------|
+| **Prefer:** Energy (oil) and industrial metals via futures or short‑duration ETFs. | Input‑cost inflation supports near‑term price strength. |
+| **Avoid:** Agricultural commodities with seasonally driven supply risk. | No clear demand‑driven catalyst and low price‑inflation expectations. |
+
+---
+
+**7. CASH & FX**  
+- **Current scenario:** DXY flat YoY, slight weakness on a 2‑yr CAGR of –1.35 %. The USD is under pressure from modest Treasury yield rises and a marginally higher foreign‑interest environment (e.g., Euro‑area yields ≈ 2‑3 %).  
+
+| Preference | Rationale |
+|------------|-----------|
+| **Prefer:** USD‑denominated cash for short‑term liquidity, but keep a **10‑15 %** allocation in **EUR/CHF** to capture the modest DXY drift and higher foreign yields. | Diversifies against a potential USD softening while maintaining cash flexibility. |
+| **Avoid:** Long‑dated USD‑linked deposits (>1 yr). | Expected real‑yield erosion if inflation expectations rebound. |
+
+---
+
+**8. PORTFOLIO MIX, SCENARIOS & ACTIONABLE STRATEGY**  
+
+| Scenario | Probability | Core Drivers |
+|----------|-------------|--------------|
+| **Base (60 %)** | 60 % | Inflation expectations continue to fall, yields flatten‑to‑steepen modestly, GDP grows 4‑5 % yearly. |
+| **Bull (25 %)** | 25 % | CPI drops <3 % and forward expectations dip below 2 % → real yields stay low, equities rally 8‑10 % YoY, long bonds rally. |
+| **Bear (15 %)** | 15 % | Inflation resurges (>4 % YoY) → forward expectations jump >3 %, yields spike, equity valuations compress. |
+
+**Suggested Allocation (Base case)**  
+| Asset Class | Weight | Tilt |
+|-------------|--------|------|
+| US Equities (Large‑cap) | 35 % | Quality, cyclical |
+| US Treasuries (2‑5 yr) | 25 % | Short‑duration, inflation‑protected |
+| Gold / TIPS | 10 % | Real‑yield hedge |
+| Commodities (Energy/Metals) | 10 % | Input‑cost exposure |
+| Cash / FX (USD + EUR/CHF) | 10 % | Liquidity, currency diversification |
+| Alternatives (real‑estate, infrastructure) | 10 % | Inflation‑linked cash flow |
+
+**Investor Profiles**  
+- **Risk‑averse:** Shift 5 % from equities to short‑duration Treasuries, raise cash to 15 %.  
+- **Balanced:** Follow the core mix above, add 5 % high‑quality corporate bonds for yield.  
+- **Aggressive:** Increase equities to 45 %, cut cash to 5 %, add 5 % leveraged exposure to energy futures.
+
+---
+
+**9. THE HUMAN ANGLE (Wages, Real Earnings, & Consumer Expectations)**  
+- **Wage vs CPI:** Average hourly earnings ↑ 3.16 % YoY, but CPI ↑ 3.90 % → **real wages down ≈ ‑0.7 %**.  
+- **Wage vs Inflation Expectation:** Earnings growth outpaces 1‑yr expectations (3.16 % > 2.39 %) and 2‑yr expectations (3.16 % > 2.44 %). Workers have **higher nominal pay** than what the market prices in, but still lose purchasing power versus actual prices.  
+- **Consumer Outlook:** The gap between CPI and 1‑yr expectations (+1.5 %) suggests households expect **future price pressure** to be lower than today’s reality, potentially dampening discretionary spend.  
+- **Housing:** Mortgage‑rate proxy (10Y‑30Y ≈ ‑0.5 %) is modestly lower than a year ago, while housing supply months have risen **14 % YoY** to 10.3 months, indicating **more inventory** and a softening market. The rising supply, combined with a still‑elevated unemployment rate, could limit price appreciation.  
+
+**Bottom line:** Real earnings are contracting, consumers are cautious, and the housing market is cooling. This environment supports **defensive equity positions**, **real‑yield protection**, and a modest tilt toward **liquidity**.
+============================================================
+✅ 2026-07-16 00:56:02 | openai/gpt-oss-120b
