@@ -1,0 +1,22 @@
+
+============================================================
+📅 YIELD CURVE DAILY REPORT - 2026-10-26
+============================================================
+
+📊 YIELD DATA:
+  3M: 4.22%   2Y: 4.68%   5Y: 4.84%
+  10Y: 5.00%   30Y: 5.31%
+
+📈 SPREADS:
+  30Y-2Y (Liquidity): 0.63%
+  10Y-2Y (Risk):      0.32%
+  10Y-3M (Recession): 0.78%
+  30Y-5Y (Long-Term): 0.47%
+
+🔍 REGIME: NORMAL_UPWARD_SLOPING (Confidence: 0.60)
+  Positive but flat curve. Moderate expansion, watch for directional change.
+
+📋 AI ANALYSIS:
+⚠️ No API key. Please set GEMINI_API_KEY.
+============================================================
+✅ 2026-10-28 02:11:47 | Gemini
