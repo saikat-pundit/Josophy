@@ -1,0 +1,22 @@
+
+============================================================
+📅 YIELD CURVE DAILY REPORT - 2026-11-11
+============================================================
+
+📊 YIELD DATA:
+  3M: nan%   2Y: nan%   5Y: nan%
+  10Y: nan%   30Y: nan%
+
+📈 SPREADS:
+  30Y-2Y (Liquidity): nan%
+  10Y-2Y (Risk):      nan%
+  10Y-3M (Recession): nan%
+  30Y-5Y (Long-Term): nan%
+
+🔍 REGIME: INSUFFICIENT_DATA (Confidence: 0.00)
+  Missing yield data
+
+📋 AI ANALYSIS:
+⚠️ No API key. Please set GEMINI_API_KEY.
+============================================================
+✅ 2026-11-13 03:24:37 | Gemini
